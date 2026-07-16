@@ -174,6 +174,61 @@
             </div>
           </template>
 
+          <template #cell-models="{ row }">
+            <div class="relative" :ref="(el) => setModelsPopoverRef(row.id, el)">
+              <button
+                @click="toggleModelsPopover(row)"
+                class="-mx-2 -my-1 flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1 text-sm transition-all duration-200 hover:bg-gray-100 dark:hover:bg-dark-700"
+                :title="t('keys.viewModels')"
+              >
+                <Icon name="cube" size="sm" class="text-gray-400" />
+                <span v-if="modelsCache[row.id]" class="text-gray-700 dark:text-gray-300">
+                  {{ t('keys.modelsCount', { count: modelsCache[row.id].length }) }}
+                </span>
+                <span v-else-if="modelsLoading[row.id]" class="text-gray-400 dark:text-gray-500">
+                  {{ t('keys.loadingModels') }}
+                </span>
+                <span v-else class="text-gray-400 dark:text-gray-500">
+                  {{ t('keys.viewModels') }}
+                </span>
+              </button>
+              <!-- Models Popover -->
+              <div
+                v-if="modelsPopoverKeyId === row.id"
+                class="absolute left-0 top-full z-50 mt-1 w-72 rounded-lg border border-gray-200 bg-white shadow-xl dark:border-dark-600 dark:bg-dark-800"
+              >
+                <div class="border-b border-gray-100 p-2 dark:border-dark-700">
+                  <input
+                    v-model="modelsSearch"
+                    :placeholder="t('keys.searchModels')"
+                    class="w-full rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-sm outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400 dark:border-dark-600 dark:bg-dark-700 dark:text-white"
+                  />
+                </div>
+                <div class="max-h-60 overflow-y-auto p-1">
+                  <div v-if="modelsLoading[row.id]" class="px-3 py-4 text-center text-sm text-gray-400">
+                    {{ t('keys.loadingModels') }}
+                  </div>
+                  <div v-else-if="modelsError[row.id]" class="px-3 py-4 text-center text-sm text-red-400">
+                    {{ t('keys.failedToLoadModels') }}
+                  </div>
+                  <div v-else-if="filteredModels(row.id).length === 0" class="px-3 py-4 text-center text-sm text-gray-400">
+                    {{ t('keys.noModels') }}
+                  </div>
+                  <div
+                    v-for="model in filteredModels(row.id)"
+                    :key="model"
+                    class="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-dark-700"
+                  >
+                    <span class="font-mono text-xs">{{ model }}</span>
+                  </div>
+                </div>
+                <div v-if="modelsCache[row.id] && modelsCache[row.id].length > 0" class="border-t border-gray-100 px-3 py-1.5 text-xs text-gray-400 dark:border-dark-700">
+                  {{ t('keys.modelsCount', { count: modelsCache[row.id].length }) }}
+                </div>
+              </div>
+            </div>
+          </template>
+
           <template #cell-current_concurrency="{ value }">
             <span
               :class="[
@@ -1126,6 +1181,8 @@ import { getPersistedPageSize } from '@/composables/usePersistedPageSize'
 
 const { t } = useI18n()
 import { keysAPI, authAPI, usageAPI, userGroupsAPI } from '@/api'
+import { buildGatewayUrl } from '@/api/url'
+import axios from 'axios'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import TablePageLayout from '@/components/layout/TablePageLayout.vue'
 	import DataTable from '@/components/common/DataTable.vue'
@@ -1180,6 +1237,7 @@ const allColumns = computed<Column[]>(() => [
   { key: 'id', label: t('keys.id'), sortable: true },
   { key: 'key', label: t('keys.apiKey'), sortable: false },
   { key: 'group', label: t('keys.group'), sortable: false },
+  { key: 'models', label: t('keys.models'), sortable: false },
   { key: 'current_concurrency', label: t('keys.currentConcurrency'), sortable: true },
   { key: 'usage', label: t('keys.usage'), sortable: false },
   { key: 'rate_limit', label: t('keys.rateLimitColumn'), sortable: false },
@@ -1312,6 +1370,65 @@ const columnDropdownRef = ref<HTMLElement | null>(null)
 const dropdownPosition = ref<{ top?: number; bottom?: number; left: number } | null>(null)
 const groupButtonRefs = ref<Map<number, HTMLElement>>(new Map())
 let abortController: AbortController | null = null
+
+// Models popover state
+const modelsCache = ref<Record<number, string[]>>({})
+const modelsLoading = ref<Record<number, boolean>>({})
+const modelsError = ref<Record<number, boolean>>({})
+const modelsPopoverKeyId = ref<number | null>(null)
+const modelsSearch = ref('')
+const modelsPopoverRefs = ref<Map<number, HTMLElement>>(new Map())
+
+const setModelsPopoverRef = (keyId: number, el: Element | ComponentPublicInstance | null) => {
+  if (el instanceof HTMLElement) {
+    modelsPopoverRefs.value.set(keyId, el)
+  } else {
+    modelsPopoverRefs.value.delete(keyId)
+  }
+}
+
+const filteredModels = (keyId: number): string[] => {
+  const models = modelsCache.value[keyId] || []
+  if (!modelsSearch.value) return models
+  const q = modelsSearch.value.toLowerCase()
+  return models.filter(m => m.toLowerCase().includes(q))
+}
+
+const fetchModels = async (key: ApiKey) => {
+  if (modelsCache.value[key.id] || modelsLoading.value[key.id]) return
+  if (!key.key || !key.group) return
+
+  modelsLoading.value[key.id] = true
+  modelsError.value[key.id] = false
+  try {
+    const url = buildGatewayUrl('/v1/models')
+    const res = await axios.get(url, {
+      headers: { Authorization: `Bearer ${key.key}` },
+      timeout: 10000
+    })
+    const data = res.data?.data
+    if (Array.isArray(data)) {
+      modelsCache.value[key.id] = data.map((m: any) => m.id || m)
+    } else {
+      modelsCache.value[key.id] = []
+    }
+  } catch {
+    modelsError.value[key.id] = true
+  } finally {
+    modelsLoading.value[key.id] = false
+  }
+}
+
+const toggleModelsPopover = (key: ApiKey) => {
+  if (modelsPopoverKeyId.value === key.id) {
+    modelsPopoverKeyId.value = null
+    modelsSearch.value = ''
+  } else {
+    modelsPopoverKeyId.value = key.id
+    modelsSearch.value = ''
+    fetchModels(key)
+  }
+}
 
 // Get the currently selected key for group change
 const selectedKeyForGroup = computed(() => {
@@ -1650,6 +1767,14 @@ const closeGroupSelector = (event: MouseEvent) => {
   }
   if (columnDropdownRef.value && !columnDropdownRef.value.contains(target)) {
     showColumnDropdown.value = false
+  }
+  // Close models popover if click is outside
+  if (modelsPopoverKeyId.value !== null) {
+    const popoverEl = modelsPopoverRefs.value.get(modelsPopoverKeyId.value)
+    if (popoverEl && !popoverEl.contains(target)) {
+      modelsPopoverKeyId.value = null
+      modelsSearch.value = ''
+    }
   }
 }
 

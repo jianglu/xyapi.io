@@ -126,6 +126,13 @@ export default {
     quota: 'Quota',
     lastUsedAt: 'Last Used',
     lastUsedIP: 'Last Used IP',
+    models: 'Available Models',
+    viewModels: 'View Models',
+    modelsCount: '{count} models',
+    noModels: 'No models',
+    loadingModels: 'Loading...',
+    failedToLoadModels: 'Failed to load models',
+    searchModels: 'Search models...',
     useKey: 'Use Key',
     useKeyModal: {
       title: 'Use API Key',

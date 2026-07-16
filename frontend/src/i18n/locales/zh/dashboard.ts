@@ -126,6 +126,13 @@ export default {
     quota: '额度',
     lastUsedAt: '上次使用时间',
     lastUsedIP: '最近使用 IP',
+    models: '可用模型',
+    viewModels: '查看模型',
+    modelsCount: '{count} 个模型',
+    noModels: '暂无模型',
+    loadingModels: '加载中...',
+    failedToLoadModels: '加载模型失败',
+    searchModels: '搜索模型...',
     useKey: '使用密钥',
     useKeyModal: {
       title: '使用 API 密钥',

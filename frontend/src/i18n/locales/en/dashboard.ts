@@ -164,7 +164,11 @@ export default {
         opencode: 'OpenCode',
       },
       curl: {
-        description: 'Quickly test your API key with a curl command.'
+        description: 'Quickly test your API key with a curl command.',
+        model: 'Model',
+        loadingModels: 'Loading models...',
+        failedModels: 'Failed to load',
+        noModels: 'No models available'
       },
       antigravity: {
         description: 'Configure API access for Antigravity group. Select the configuration method based on your client.',

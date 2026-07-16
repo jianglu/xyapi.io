@@ -165,7 +165,11 @@ export default {
         opencode: 'OpenCode'
       },
       curl: {
-        description: '使用 curl 命令快速测试 API 密钥是否可用。'
+        description: '使用 curl 命令快速测试 API 密钥是否可用。',
+        model: '模型',
+        loadingModels: '加载模型中...',
+        failedModels: '加载失败',
+        noModels: '无可用模型'
       },
       antigravity: {
         description: '为 Antigravity 分组配置 API 访问。请根据您使用的客户端选择对应的配置方式。',

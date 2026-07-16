@@ -125,6 +125,42 @@
           </nav>
         </div>
 
+        <!-- Model Selector (curl tab only) -->
+        <div v-if="activeClientTab === 'curl'" class="flex items-center gap-3">
+          <label class="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+            {{ t('keys.useKeyModal.curl.model') }}
+          </label>
+          <div class="relative flex-1">
+            <select
+              v-model="selectedModel"
+              class="input pr-8 appearance-none cursor-pointer"
+              :disabled="modelsLoading || modelsError || modelsList.length === 0"
+            >
+              <option v-if="modelsLoading" value="" disabled>
+                {{ t('keys.useKeyModal.curl.loadingModels') }}
+              </option>
+              <option v-else-if="modelsError" value="" disabled>
+                {{ t('keys.useKeyModal.curl.failedModels') }}
+              </option>
+              <option v-else-if="modelsList.length === 0" value="" disabled>
+                {{ t('keys.useKeyModal.curl.noModels') }}
+              </option>
+              <option
+                v-for="model in modelsList"
+                :key="model"
+                :value="model"
+              >
+                {{ model }}
+              </option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+              <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
         <!-- Code Blocks (Stacked for multi-file platforms) -->
         <div class="space-y-4">
           <div
@@ -194,6 +230,7 @@ import BaseDialog from '@/components/common/BaseDialog.vue'
 import Icon from '@/components/icons/Icon.vue'
 import { useClipboard } from '@/composables/useClipboard'
 import type { GroupPlatform } from '@/types'
+import { buildGatewayUrl } from '@/api/url'
 
 interface Props {
   show: boolean
@@ -232,6 +269,56 @@ const activeClientTab = ref<string>('claude')
 type CodexAuthMode = 'legacy' | 'api-key'
 const codexAuthMode = ref<CodexAuthMode>('legacy')
 
+// Models state for curl tab
+const modelsList = ref<string[]>([])
+const modelsLoading = ref(false)
+const modelsError = ref(false)
+const selectedModel = ref<string>('')
+
+// Fetch models for the current API key
+const fetchModels = async () => {
+  if (modelsList.value.length > 0 || modelsLoading.value) return
+  if (!props.apiKey) return
+
+  modelsLoading.value = true
+  modelsError.value = false
+  try {
+    const url = buildGatewayUrl('/v1/models')
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${props.apiKey}` },
+      signal: AbortSignal.timeout(10000)
+    })
+    const data = await res.json()
+    if (Array.isArray(data?.data)) {
+      modelsList.value = data.data.map((m: any) => m.id || m).sort()
+      // Set default model based on platform
+      if (modelsList.value.length > 0) {
+        selectedModel.value = getDefaultModel(modelsList.value)
+      }
+    }
+  } catch {
+    modelsError.value = true
+  } finally {
+    modelsLoading.value = false
+  }
+}
+
+// Get a sensible default model from the available models list
+function getDefaultModel(models: string[]): string {
+  const platform = props.platform
+  // Try platform-specific defaults first
+  const candidates = platform === 'openai' ? ['gpt-4o-mini', 'gpt-4o', 'gpt-3.5-turbo']
+    : platform === 'anthropic' || platform === 'antigravity' ? ['claude-sonnet-4-20250514', 'claude-3-5-sonnet-20241022', 'claude-3-haiku-20240307']
+    : platform === 'gemini' ? ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-pro']
+    : platform === 'grok' ? ['grok-3', 'grok-3-mini', 'grok-2']
+    : []
+  for (const c of candidates) {
+    if (models.includes(c)) return c
+  }
+  // Fallback: first model
+  return models[0] || ''
+}
+
 // Reset tabs when platform changes
 const defaultClientTab = computed(() => {
   return 'curl'
@@ -246,6 +333,12 @@ watch(() => props.platform, () => {
 watch(() => props.show, (show) => {
   if (show) {
     codexAuthMode.value = 'legacy'
+    // Reset and fetch models for curl tab
+    modelsList.value = []
+    modelsLoading.value = false
+    modelsError.value = false
+    selectedModel.value = ''
+    fetchModels()
   }
 })
 
@@ -552,12 +645,20 @@ function generateCurlFiles(apiBase: string, antigravityBase: string, geminiBase:
   const isCmd = activeTab.value === 'cmd'
   const cont = isUnix ? ' \\\n  ' : isCmd ? ' ^\n  ' : ' `\n  '
 
+  // Use selected model from dropdown, fallback to platform defaults
+  const model = selectedModel.value || (
+    platform === 'openai' ? 'gpt-4o-mini'
+    : platform === 'grok' ? 'grok-3'
+    : platform === 'gemini' ? 'gemini-2.0-flash'
+    : 'claude-sonnet-4-20250514'
+  )
+
   let path: string
   let content: string
   let highlighted: string
 
   if (platform === 'gemini') {
-    const url = `${geminiBase}/models/gemini-2.0-flash:generateContent`
+    const url = `${geminiBase}/models/${model}:generateContent`
     const body = '{"contents":[{"parts":[{"text":"Hello"}]}]}'
     path = isUnix ? 'Terminal' : isCmd ? 'Command Prompt' : 'PowerShell'
     const bodyEscaped = isCmd
@@ -572,7 +673,6 @@ function generateCurlFiles(apiBase: string, antigravityBase: string, geminiBase:
     ].join('')
   } else if (platform === 'antigravity') {
     const url = `${antigravityBase}/messages`
-    const model = 'claude-sonnet-4-20250514'
     const body = `{"model":"${model}","max_tokens":256,"messages":[{"role":"user","content":"Hello"}]}`
     const bodyEscaped = isCmd
       ? `{\\\"model\\\":\\\"${model}\\\",\\\"max_tokens\\\":256,\\\"messages\\\":[{\\\"role\\\":\\\"user\\\",\\\"content\\\":\\\"Hello\\\"}]}`
@@ -590,7 +690,6 @@ function generateCurlFiles(apiBase: string, antigravityBase: string, geminiBase:
   } else if (platform === 'openai' || platform === 'grok') {
     // OpenAI-compatible: Chat Completions
     const url = `${apiBase}/chat/completions`
-    const model = platform === 'grok' ? 'grok-3' : 'gpt-4o-mini'
     const body = `{"model":"${model}","messages":[{"role":"user","content":"Hello"}]}`
     const bodyEscaped = isCmd
       ? `{\\\"model\\\":\\\"${model}\\\",\\\"messages\\\":[{\\\"role\\\":\\\"user\\\",\\\"content\\\":\\\"Hello\\\"}]}`
@@ -607,7 +706,6 @@ function generateCurlFiles(apiBase: string, antigravityBase: string, geminiBase:
   } else {
     // Anthropic: Messages API
     const url = `${apiBase}/messages`
-    const model = 'claude-sonnet-4-20250514'
     const body = `{"model":"${model}","max_tokens":256,"messages":[{"role":"user","content":"Hello"}]}`
     const bodyEscaped = isCmd
       ? `{\\\"model\\\":\\\"${model}\\\",\\\"max_tokens\\\":256,\\\"messages\\\":[{\\\"role\\\":\\\"user\\\",\\\"content\\\":\\\"Hello\\\"}]}`

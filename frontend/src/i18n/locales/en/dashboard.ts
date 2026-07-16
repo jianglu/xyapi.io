@@ -155,12 +155,16 @@ export default {
         noteWindows: 'Press Win+R and enter %userprofile%\\.codex to open the config directory. Create it manually if it does not exist.',
       },
       cliTabs: {
+        curl: 'curl',
         claudeCode: 'Claude Code',
         geminiCli: 'Gemini CLI',
         codexCli: 'Codex CLI',
         codexCliWs: 'Codex CLI (WebSocket)',
         grokCli: 'Grok CLI',
         opencode: 'OpenCode',
+      },
+      curl: {
+        description: 'Quickly test your API key with a curl command.'
       },
       antigravity: {
         description: 'Configure API access for Antigravity group. Select the configuration method based on your client.',

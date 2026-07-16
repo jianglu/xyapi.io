@@ -234,18 +234,7 @@ const codexAuthMode = ref<CodexAuthMode>('legacy')
 
 // Reset tabs when platform changes
 const defaultClientTab = computed(() => {
-  switch (props.platform) {
-    case 'openai':
-      return 'codex'
-    case 'grok':
-      return 'grok'
-    case 'gemini':
-      return 'gemini'
-    case 'antigravity':
-      return 'claude'
-    default:
-      return 'claude'
-  }
+  return 'curl'
 })
 
 watch(() => props.platform, () => {
@@ -330,9 +319,11 @@ const SparkleIcon = {
 
 const clientTabs = computed((): TabConfig[] => {
   if (!props.platform) return []
+  const curlTab: TabConfig = { id: 'curl', label: t('keys.useKeyModal.cliTabs.curl'), icon: TerminalIcon }
   switch (props.platform) {
     case 'openai': {
       const tabs: TabConfig[] = [
+        curlTab,
         { id: 'codex', label: t('keys.useKeyModal.cliTabs.codexCli'), icon: TerminalIcon },
         { id: 'codex-ws', label: t('keys.useKeyModal.cliTabs.codexCliWs'), icon: TerminalIcon },
       ]
@@ -344,17 +335,20 @@ const clientTabs = computed((): TabConfig[] => {
     }
     case 'gemini':
       return [
+        curlTab,
         { id: 'gemini', label: t('keys.useKeyModal.cliTabs.geminiCli'), icon: SparkleIcon },
         { id: 'opencode', label: t('keys.useKeyModal.cliTabs.opencode'), icon: TerminalIcon }
       ]
     case 'antigravity':
       return [
+        curlTab,
         { id: 'claude', label: t('keys.useKeyModal.cliTabs.claudeCode'), icon: TerminalIcon },
         { id: 'gemini', label: t('keys.useKeyModal.cliTabs.geminiCli'), icon: SparkleIcon },
         { id: 'opencode', label: t('keys.useKeyModal.cliTabs.opencode'), icon: TerminalIcon }
       ]
     case 'grok':
       return [
+        curlTab,
         { id: 'grok', label: t('keys.useKeyModal.cliTabs.grokCli'), icon: TerminalIcon },
         { id: 'claude', label: t('keys.useKeyModal.cliTabs.claudeCode'), icon: TerminalIcon },
         { id: 'codex', label: t('keys.useKeyModal.cliTabs.codexCli'), icon: TerminalIcon },
@@ -362,6 +356,7 @@ const clientTabs = computed((): TabConfig[] => {
       ]
     default:
       return [
+        curlTab,
         { id: 'claude', label: t('keys.useKeyModal.cliTabs.claudeCode'), icon: TerminalIcon },
         { id: 'opencode', label: t('keys.useKeyModal.cliTabs.opencode'), icon: TerminalIcon }
       ]
@@ -397,6 +392,9 @@ const currentTabs = computed(() => {
 })
 
 const platformDescription = computed(() => {
+  if (activeClientTab.value === 'curl') {
+    return t('keys.useKeyModal.curl.description')
+  }
   switch (props.platform) {
     case 'openai':
       if (activeClientTab.value === 'claude') {
@@ -421,6 +419,9 @@ const platformDescription = computed(() => {
 })
 
 const platformNote = computed(() => {
+  if (activeClientTab.value === 'curl') {
+    return ''
+  }
   switch (props.platform) {
     case 'openai':
       if (activeClientTab.value === 'claude') {
@@ -511,6 +512,10 @@ const currentFiles = computed((): FileConfig[] => {
     }
   }
 
+  if (activeClientTab.value === 'curl') {
+    return [generateCurlFiles(apiBase, antigravityBase, geminiBase)]
+  }
+
   switch (props.platform) {
     case 'openai':
       if (activeClientTab.value === 'claude') {
@@ -539,6 +544,88 @@ const currentFiles = computed((): FileConfig[] => {
       return generateAnthropicFiles(baseUrl, apiKey)
   }
 })
+
+function generateCurlFiles(apiBase: string, antigravityBase: string, geminiBase: string): FileConfig {
+  const apiKey = props.apiKey
+  const platform = props.platform
+  const isUnix = activeTab.value === 'unix'
+  const isCmd = activeTab.value === 'cmd'
+  const cont = isUnix ? ' \\\n  ' : isCmd ? ' ^\n  ' : ' `\n  '
+
+  let path: string
+  let content: string
+  let highlighted: string
+
+  if (platform === 'gemini') {
+    const url = `${geminiBase}/models/gemini-2.0-flash:generateContent`
+    const body = '{"contents":[{"parts":[{"text":"Hello"}]}]}'
+    path = isUnix ? 'Terminal' : isCmd ? 'Command Prompt' : 'PowerShell'
+    const bodyEscaped = isCmd
+      ? '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'
+      : body
+    content = `curl "${url}?key=${apiKey}"${cont}-H "Content-Type: application/json"${cont}-d '${bodyEscaped}'`
+    highlighted = [
+      keyword('curl'),
+      ` ${string(`"${url}?key=..."`)}`,
+      `${cont}${keyword('-H')} ${string('"Content-Type: application/json"')}`,
+      `${cont}${keyword('-d')} ${string(`'${bodyEscaped}'`)}`
+    ].join('')
+  } else if (platform === 'antigravity') {
+    const url = `${antigravityBase}/messages`
+    const model = 'claude-sonnet-4-20250514'
+    const body = `{"model":"${model}","max_tokens":256,"messages":[{"role":"user","content":"Hello"}]}`
+    const bodyEscaped = isCmd
+      ? `{\\\"model\\\":\\\"${model}\\\",\\\"max_tokens\\\":256,\\\"messages\\\":[{\\\"role\\\":\\\"user\\\",\\\"content\\\":\\\"Hello\\\"}]}`
+      : body
+    path = isUnix ? 'Terminal' : isCmd ? 'Command Prompt' : 'PowerShell'
+    content = `curl "${url}"${cont}-H "x-api-key: ${apiKey}"${cont}-H "anthropic-version: 2023-06-01"${cont}-H "Content-Type: application/json"${cont}-d '${bodyEscaped}'`
+    highlighted = [
+      keyword('curl'),
+      ` ${string(`"${url}"`)}`,
+      `${cont}${keyword('-H')} ${string('"x-api-key: ..."')}`,
+      `${cont}${keyword('-H')} ${string('"anthropic-version: 2023-06-01"')}`,
+      `${cont}${keyword('-H')} ${string('"Content-Type: application/json"')}`,
+      `${cont}${keyword('-d')} ${string(`'${bodyEscaped}'`)}`
+    ].join('')
+  } else if (platform === 'openai' || platform === 'grok') {
+    // OpenAI-compatible: Chat Completions
+    const url = `${apiBase}/chat/completions`
+    const model = platform === 'grok' ? 'grok-3' : 'gpt-4o-mini'
+    const body = `{"model":"${model}","messages":[{"role":"user","content":"Hello"}]}`
+    const bodyEscaped = isCmd
+      ? `{\\\"model\\\":\\\"${model}\\\",\\\"messages\\\":[{\\\"role\\\":\\\"user\\\",\\\"content\\\":\\\"Hello\\\"}]}`
+      : body
+    path = isUnix ? 'Terminal' : isCmd ? 'Command Prompt' : 'PowerShell'
+    content = `curl "${url}"${cont}-H "Authorization: Bearer ${apiKey}"${cont}-H "Content-Type: application/json"${cont}-d '${bodyEscaped}'`
+    highlighted = [
+      keyword('curl'),
+      ` ${string(`"${url}"`)}`,
+      `${cont}${keyword('-H')} ${string('"Authorization: Bearer ..."')}`,
+      `${cont}${keyword('-H')} ${string('"Content-Type: application/json"')}`,
+      `${cont}${keyword('-d')} ${string(`'${bodyEscaped}'`)}`
+    ].join('')
+  } else {
+    // Anthropic: Messages API
+    const url = `${apiBase}/messages`
+    const model = 'claude-sonnet-4-20250514'
+    const body = `{"model":"${model}","max_tokens":256,"messages":[{"role":"user","content":"Hello"}]}`
+    const bodyEscaped = isCmd
+      ? `{\\\"model\\\":\\\"${model}\\\",\\\"max_tokens\\\":256,\\\"messages\\\":[{\\\"role\\\":\\\"user\\\",\\\"content\\\":\\\"Hello\\\"}]}`
+      : body
+    path = isUnix ? 'Terminal' : isCmd ? 'Command Prompt' : 'PowerShell'
+    content = `curl "${url}"${cont}-H "x-api-key: ${apiKey}"${cont}-H "anthropic-version: 2023-06-01"${cont}-H "Content-Type: application/json"${cont}-d '${bodyEscaped}'`
+    highlighted = [
+      keyword('curl'),
+      ` ${string(`"${url}"`)}`,
+      `${cont}${keyword('-H')} ${string('"x-api-key: ..."')}`,
+      `${cont}${keyword('-H')} ${string('"anthropic-version: 2023-06-01"')}`,
+      `${cont}${keyword('-H')} ${string('"Content-Type: application/json"')}`,
+      `${cont}${keyword('-d')} ${string(`'${bodyEscaped}'`)}`
+    ].join('')
+  }
+
+  return { path, content, highlighted }
+}
 
 function generateAnthropicFiles(baseUrl: string, apiKey: string): FileConfig[] {
   let path: string

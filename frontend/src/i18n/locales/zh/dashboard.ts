@@ -156,12 +156,16 @@ export default {
           '按 Win+R，输入 %userprofile%\\.codex 打开配置目录。如目录不存在，请先手动创建。'
       },
       cliTabs: {
+        curl: 'curl',
         claudeCode: 'Claude Code',
         geminiCli: 'Gemini CLI',
         codexCli: 'Codex CLI',
         codexCliWs: 'Codex CLI (WebSocket)',
         grokCli: 'Grok CLI',
         opencode: 'OpenCode'
+      },
+      curl: {
+        description: '使用 curl 命令快速测试 API 密钥是否可用。'
       },
       antigravity: {
         description: '为 Antigravity 分组配置 API 访问。请根据您使用的客户端选择对应的配置方式。',

@@ -237,6 +237,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       requiresAuth: true,
       requiresAdmin: false,
+      requiresRedeemCode: true,
       title: 'Redeem Code',
       titleKey: 'redeem.title',
       descriptionKey: 'redeem.description'
@@ -533,6 +534,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       requiresAuth: true,
       requiresAdmin: true,
+      requiresRedeemCode: true,
       title: 'Redeem Code Management',
       titleKey: 'admin.redeem.title',
       descriptionKey: 'admin.redeem.description'
@@ -854,6 +856,15 @@ router.beforeEach(async (to, _from, next) => {
     appStore.cachedPublicSettings?.risk_control_enabled === false
   ) {
     next(authStore.isAdmin ? '/admin/settings' : '/dashboard')
+    return
+  }
+
+  if (
+    to.meta.requiresRedeemCode &&
+    appStore.publicSettingsLoaded &&
+    appStore.cachedPublicSettings?.redeem_code_enabled === false
+  ) {
+    next(authStore.isAdmin ? '/admin/dashboard' : '/dashboard')
     return
   }
 

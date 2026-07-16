@@ -566,7 +566,7 @@ function generateCurlFiles(apiBase: string, antigravityBase: string, geminiBase:
     content = `curl "${url}?key=${apiKey}"${cont}-H "Content-Type: application/json"${cont}-d '${bodyEscaped}'`
     highlighted = [
       keyword('curl'),
-      ` ${string(`"${url}?key=..."`)}`,
+      ` ${string(`"${url}?key=${apiKey}"`)}`,
       `${cont}${keyword('-H')} ${string('"Content-Type: application/json"')}`,
       `${cont}${keyword('-d')} ${string(`'${bodyEscaped}'`)}`
     ].join('')
@@ -582,7 +582,7 @@ function generateCurlFiles(apiBase: string, antigravityBase: string, geminiBase:
     highlighted = [
       keyword('curl'),
       ` ${string(`"${url}"`)}`,
-      `${cont}${keyword('-H')} ${string('"x-api-key: ..."')}`,
+      `${cont}${keyword('-H')} ${string(`"x-api-key: ${apiKey}"`)}`,
       `${cont}${keyword('-H')} ${string('"anthropic-version: 2023-06-01"')}`,
       `${cont}${keyword('-H')} ${string('"Content-Type: application/json"')}`,
       `${cont}${keyword('-d')} ${string(`'${bodyEscaped}'`)}`
@@ -600,7 +600,7 @@ function generateCurlFiles(apiBase: string, antigravityBase: string, geminiBase:
     highlighted = [
       keyword('curl'),
       ` ${string(`"${url}"`)}`,
-      `${cont}${keyword('-H')} ${string('"Authorization: Bearer ..."')}`,
+      `${cont}${keyword('-H')} ${string(`"Authorization: Bearer ${apiKey}"`)}`,
       `${cont}${keyword('-H')} ${string('"Content-Type: application/json"')}`,
       `${cont}${keyword('-d')} ${string(`'${bodyEscaped}'`)}`
     ].join('')
@@ -617,7 +617,7 @@ function generateCurlFiles(apiBase: string, antigravityBase: string, geminiBase:
     highlighted = [
       keyword('curl'),
       ` ${string(`"${url}"`)}`,
-      `${cont}${keyword('-H')} ${string('"x-api-key: ..."')}`,
+      `${cont}${keyword('-H')} ${string(`"x-api-key: ${apiKey}"`)}`,
       `${cont}${keyword('-H')} ${string('"anthropic-version: 2023-06-01"')}`,
       `${cont}${keyword('-H')} ${string('"Content-Type: application/json"')}`,
       `${cont}${keyword('-d')} ${string(`'${bodyEscaped}'`)}`

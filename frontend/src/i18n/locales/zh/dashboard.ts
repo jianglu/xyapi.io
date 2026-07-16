@@ -95,7 +95,7 @@ export default {
     created: '创建时间',
     copyToClipboard: '复制到剪贴板',
     copied: '已复制！',
-    importToCcSwitch: '导入到 CCS',
+    importToCcSwitch: 'CC Switch',
     enable: '启用',
     disable: '禁用',
     nameLabel: '名称',

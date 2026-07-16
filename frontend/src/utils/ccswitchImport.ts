@@ -2,7 +2,14 @@ import type { GroupPlatform } from '@/types'
 
 export const OPENAI_CC_SWITCH_CODEX_MODEL = 'gpt-5.5'
 
-export type CcSwitchClientType = 'claude' | 'gemini'
+export type CcSwitchClientType =
+  | 'claude'
+  | 'claude-desktop'
+  | 'codex'
+  | 'gemini'
+  | 'openclaw'
+  | 'opencode'
+  | 'hermes'
 
 export interface CcSwitchImportConfig {
   app: string
@@ -19,31 +26,60 @@ export interface CcSwitchImportDeeplinkInput {
   usageScript: string
 }
 
+function appForClient(clientType: CcSwitchClientType): string {
+  switch (clientType) {
+    case 'claude':
+      return 'claude'
+    case 'claude-desktop':
+      return 'claude-desktop'
+    case 'codex':
+      return 'codex'
+    case 'gemini':
+      return 'gemini'
+    case 'openclaw':
+      return 'openclaw'
+    case 'opencode':
+      return 'opencode'
+    case 'hermes':
+      return 'hermes'
+    default:
+      return clientType
+  }
+}
+
 export function resolveCcSwitchImportConfig(
   platform: GroupPlatform | undefined | null,
   clientType: CcSwitchClientType,
   baseUrl: string
 ): CcSwitchImportConfig {
+  const app = appForClient(clientType)
+
   switch (platform || 'anthropic') {
     case 'antigravity':
       return {
-        app: clientType === 'gemini' ? 'gemini' : 'claude',
+        app,
         endpoint: `${baseUrl}/antigravity`
       }
     case 'openai':
       return {
-        app: 'codex',
+        app,
         endpoint: baseUrl,
-        model: OPENAI_CC_SWITCH_CODEX_MODEL
+        model: clientType === 'codex' ? OPENAI_CC_SWITCH_CODEX_MODEL : undefined
       }
     case 'gemini':
       return {
-        app: 'gemini',
+        app,
         endpoint: baseUrl
+      }
+    case 'grok':
+      return {
+        app,
+        endpoint: baseUrl,
+        model: clientType === 'codex' ? 'grok-4.5' : undefined
       }
     default:
       return {
-        app: 'claude',
+        app,
         endpoint: baseUrl
       }
   }

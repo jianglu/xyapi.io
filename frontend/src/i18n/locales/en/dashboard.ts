@@ -215,13 +215,25 @@ export default {
     ipBlacklistHint: 'One IP or CIDR per line. These IPs will be blocked from using this key.',
     ipRestrictionEnabled: 'IP restriction enabled',
     ccSwitchNotInstalled: 'CC-Switch is not installed or the protocol handler is not registered. Please install CC-Switch first or manually copy the API key.',
-    ccsClientSelect: {
-      title: 'Select Client',
-      description: 'Please select the client type to import to CC-Switch:',
-      claudeCode: 'Claude Code',
-      claudeCodeDesc: 'Import as Claude Code configuration',
-      geminiCli: 'Gemini CLI',
-      geminiCliDesc: 'Import as Gemini CLI configuration',
+    ccSwitchImport: {
+      title: 'Import to CC Switch',
+      importButton: 'Import to CC Switch',
+      clients: {
+        claudeCode: 'Claude Code',
+        claudeCodeDesc: 'Anthropic Claude Code CLI',
+        claudeDesktop: 'Claude Desktop',
+        claudeDesktopDesc: 'Anthropic Claude Desktop App',
+        codex: 'CodeX',
+        codexDesc: 'OpenAI Codex CLI',
+        gemini: 'Gemini',
+        geminiDesc: 'Google Gemini CLI',
+        openclaw: 'OpenClaw',
+        openclawDesc: 'OpenClaw Client',
+        opencode: 'OpenCode',
+        opencodeDesc: 'OpenCode Editor',
+        hermes: 'Hermes',
+        hermesDesc: 'Hermes Client'
+      }
     },
     // Quota and expiration
     quotaLimit: 'Quota Limit',

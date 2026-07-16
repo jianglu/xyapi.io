@@ -5394,24 +5394,27 @@
                 >
                   {{ t("admin.settings.site.themePrimaryColor") }}
                 </label>
-                <div class="flex flex-wrap gap-3">
+                <div class="grid grid-cols-4 gap-2 sm:grid-cols-7">
                   <button
                     v-for="theme in themeOptions"
                     :key="theme.id"
                     type="button"
-                    class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-all"
+                    class="group flex flex-col items-center gap-1.5 rounded-lg p-2 transition-all"
                     :class="
                       form.theme_primary_color === theme.id
-                        ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300'
-                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500'
+                        ? 'bg-primary-50 ring-2 ring-primary-500 dark:bg-primary-900/20'
+                        : 'hover:bg-gray-100 dark:hover:bg-gray-800'
                     "
                     @click="form.theme_primary_color = theme.id"
                   >
                     <span
-                      class="inline-block h-4 w-4 rounded-full"
+                      class="block h-8 w-8 rounded-full ring-2 ring-offset-2 transition-all"
+                      :class="form.theme_primary_color === theme.id
+                        ? 'ring-primary-500 ring-offset-white dark:ring-offset-gray-900'
+                        : 'ring-transparent ring-offset-white dark:ring-offset-gray-900 group-hover:ring-gray-300 dark:group-hover:ring-gray-600'"
                       :style="{ backgroundColor: theme.color }"
                     ></span>
-                    {{ theme.label }}
+                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400">{{ theme.label }}</span>
                   </button>
                 </div>
                 <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">

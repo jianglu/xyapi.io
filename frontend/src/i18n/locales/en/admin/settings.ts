@@ -478,8 +478,8 @@ export default {
         homeContentIframeWarning: '⚠️ iframe mode note: Some websites have X-Frame-Options or CSP security policies that prevent embedding in iframes. If the page appears blank or shows an error, please verify the target website allows embedding, or consider using HTML mode to build your own content.',
         hideCcsImportButton: 'Hide CC Switch Button',
         hideCcsImportButtonHint: 'When enabled, the "CC Switch" button will be hidden on the API Keys page',
-        themePrimaryColor: 'Theme Primary Color',
-        themePrimaryColorHint: 'Select the brand primary color for the site, applied globally'
+        themePrimaryColor: 'Theme Color',
+        themePrimaryColorHint: 'Select the brand primary color for the site. Uses a shadcn-style semantic color system.'
       },
       purchase: {
         title: 'Recharge / Subscription Page',

@@ -32,11 +32,75 @@
   --color-primary-rgb-r: 20;
   --color-primary-rgb-g: 184;
   --color-primary-rgb-b: 166;
+
+  /* ===== Semantic color tokens (shadcn-style) ===== */
+  /* Light mode defaults (Zinc base + teal primary). */
+  /* Overridden at runtime by useTheme.ts applyTheme(). */
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 172 76% 36%;
+
+  /* Dark mode values stored under --dark-* prefix by useTheme.ts */
+  --dark--background: 240 10% 3.9%;
+  --dark--foreground: 0 0% 98%;
+  --dark--card: 240 10% 3.9%;
+  --dark--card-foreground: 0 0% 98%;
+  --dark--popover: 240 10% 3.9%;
+  --dark--popover-foreground: 0 0% 98%;
+  --dark--primary-foreground: 0 0% 100%;
+  --dark--secondary: 240 3.7% 15.9%;
+  --dark--secondary-foreground: 0 0% 98%;
+  --dark--muted: 240 3.7% 15.9%;
+  --dark--muted-foreground: 240 5% 64.9%;
+  --dark--accent: 240 3.7% 15.9%;
+  --dark--accent-foreground: 0 0% 98%;
+  --dark--destructive: 0 62.8% 30.6%;
+  --dark--destructive-foreground: 0 0% 98%;
+  --dark--border: 240 3.7% 15.9%;
+  --dark--input: 240 3.7% 15.9%;
+  --dark--ring: 172 76% 36%;
+}
+
+/* In dark mode, swap semantic variables to their --dark-* counterparts */
+.dark {
+  --background: var(--dark--background);
+  --foreground: var(--dark--foreground);
+  --card: var(--dark--card);
+  --card-foreground: var(--dark--card-foreground);
+  --popover: var(--dark--popover);
+  --popover-foreground: var(--dark--popover-foreground);
+  --primary-foreground: var(--dark--primary-foreground);
+  --secondary: var(--dark--secondary);
+  --secondary-foreground: var(--dark--secondary-foreground);
+  --muted: var(--dark--muted);
+  --muted-foreground: var(--dark--muted-foreground);
+  --accent: var(--dark--accent);
+  --accent-foreground: var(--dark--accent-foreground);
+  --destructive: var(--dark--destructive);
+  --destructive-foreground: var(--dark--destructive-foreground);
+  --border: var(--dark--border);
+  --input: var(--dark--input);
+  --ring: var(--dark--ring);
 }
 
 @layer base {
   * {
-    @apply border-gray-200 dark:border-dark-700;
+    @apply border-border;
   }
 
   html {
@@ -44,7 +108,7 @@
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 dark:bg-dark-950 dark:text-gray-100;
+    @apply bg-background text-foreground;
     @apply min-h-screen;
   }
 

@@ -20,8 +20,29 @@ export default {
           900: 'rgb(var(--color-primary-rgb-900) / <alpha-value>)',
           950: 'rgb(var(--color-primary-rgb-950) / <alpha-value>)'
         },
-        // 辅助色 - 深蓝灰
+        // 语义化色彩 (shadcn 风格) - 通过 CSS Variables 切换 light/dark
+        background: 'hsl(var(--background) / <alpha-value>)',
+        foreground: 'hsl(var(--foreground) / <alpha-value>)',
+        card: {
+          DEFAULT: 'hsl(var(--card) / <alpha-value>)',
+          foreground: 'hsl(var(--card-foreground) / <alpha-value>)'
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover) / <alpha-value>)',
+          foreground: 'hsl(var(--popover-foreground) / <alpha-value>)'
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary) / <alpha-value>)',
+          foreground: 'hsl(var(--secondary-foreground) / <alpha-value>)'
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
+          foreground: 'hsl(var(--muted-foreground) / <alpha-value>)'
+        },
         accent: {
+          DEFAULT: 'hsl(var(--accent) / <alpha-value>)',
+          foreground: 'hsl(var(--accent-foreground) / <alpha-value>)',
+          // 保留旧色阶（gradient-text 等仍在使用）
           50: '#f8fafc',
           100: '#f1f5f9',
           200: '#e2e8f0',
@@ -34,6 +55,13 @@ export default {
           900: '#0f172a',
           950: '#020617'
         },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
+          foreground: 'hsl(var(--destructive-foreground) / <alpha-value>)'
+        },
+        border: 'hsl(var(--border) / <alpha-value>)',
+        input: 'hsl(var(--input) / <alpha-value>)',
+        ring: 'hsl(var(--ring) / <alpha-value>)',
         // 深色模式背景
         dark: {
           50: '#f8fafc',

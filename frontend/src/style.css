@@ -2,6 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== Theme: Primary Color CSS Variables ===== */
+/* Default: teal. Overridden at runtime by useTheme.ts */
+:root {
+  --color-primary-50: #f0fdfa;
+  --color-primary-100: #ccfbf1;
+  --color-primary-200: #99f6e4;
+  --color-primary-300: #5eead4;
+  --color-primary-400: #2dd4bf;
+  --color-primary-500: #14b8a6;
+  --color-primary-600: #0d9488;
+  --color-primary-700: #0f766e;
+  --color-primary-800: #115e59;
+  --color-primary-900: #134e4a;
+  --color-primary-950: #042f2e;
+  /* RGB values for Tailwind opacity modifier support */
+  --color-primary-rgb-50: 240 253 250;
+  --color-primary-rgb-100: 204 251 241;
+  --color-primary-rgb-200: 153 246 228;
+  --color-primary-rgb-300: 94 234 212;
+  --color-primary-rgb-400: 45 212 191;
+  --color-primary-rgb-500: 20 184 166;
+  --color-primary-rgb-600: 13 148 136;
+  --color-primary-rgb-700: 15 118 110;
+  --color-primary-rgb-800: 17 94 89;
+  --color-primary-rgb-900: 19 78 74;
+  --color-primary-rgb-950: 4 47 46;
+  /* RGB components for glow/gradient effects */
+  --color-primary-rgb-r: 20;
+  --color-primary-rgb-g: 184;
+  --color-primary-rgb-b: 166;
+}
+
 @layer base {
   * {
     @apply border-gray-200 dark:border-dark-700;

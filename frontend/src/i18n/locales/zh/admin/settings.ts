@@ -471,7 +471,9 @@ export default {
         homeContentIframeWarning:
           '⚠️ iframe 模式提示：部分网站设置了 X-Frame-Options 或 CSP 安全策略，禁止被嵌入到 iframe 中。如果页面显示空白或报错，请确认目标网站允许被嵌入，或考虑使用 HTML 模式自行构建页面内容。',
         hideCcsImportButton: '隐藏 CCS 导入按钮',
-        hideCcsImportButtonHint: '启用后将在 API Keys 页面隐藏"导入 CCS"按钮'
+        hideCcsImportButtonHint: '启用后将在 API Keys 页面隐藏"导入 CCS"按钮',
+        themePrimaryColor: '主题主色',
+        themePrimaryColorHint: '选择站点品牌主色调，全站统一生效'
       },
       purchase: {
         title: '充值/订阅页面',

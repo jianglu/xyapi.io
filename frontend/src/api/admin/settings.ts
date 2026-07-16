@@ -439,7 +439,7 @@ export interface SystemSettings {
   backend_mode_enabled: boolean;
   custom_menu_items: CustomMenuItem[];
   custom_endpoints: CustomEndpoint[];
-  // SMTP settings
+  theme_primary_color: string;
   smtp_host: string;
   smtp_port: number;
   smtp_username: string;
@@ -740,6 +740,7 @@ export interface UpdateSettingsRequest {
   backend_mode_enabled?: boolean;
   custom_menu_items?: CustomMenuItem[];
   custom_endpoints?: CustomEndpoint[];
+  theme_primary_color?: string;
   smtp_host?: string;
   smtp_port?: number;
   smtp_username?: string;

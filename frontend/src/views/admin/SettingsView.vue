@@ -5372,6 +5372,38 @@
                 </button>
               </div>
 
+              <!-- Theme Primary Color -->
+              <div>
+                <label
+                  class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  {{ t("admin.settings.site.themePrimaryColor") }}
+                </label>
+                <div class="flex flex-wrap gap-3">
+                  <button
+                    v-for="theme in themeOptions"
+                    :key="theme.id"
+                    type="button"
+                    class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-all"
+                    :class="
+                      form.theme_primary_color === theme.id
+                        ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300'
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500'
+                    "
+                    @click="form.theme_primary_color = theme.id"
+                  >
+                    <span
+                      class="inline-block h-4 w-4 rounded-full"
+                      :style="{ backgroundColor: theme.color }"
+                    ></span>
+                    {{ theme.label }}
+                  </button>
+                </div>
+                <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t("admin.settings.site.themePrimaryColorHint") }}
+                </p>
+              </div>
+
               <!-- Contact Info -->
               <div>
                 <label
@@ -7438,6 +7470,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { THEME_OPTIONS } from "@/composables/useTheme";
 import { adminAPI } from "@/api";
 import {
   appendAuthSourceDefaultsToUpdateRequest,
@@ -7506,6 +7539,7 @@ const { t, locale } = useI18n();
 const appStore = useAppStore();
 const adminSettingsStore = useAdminSettingsStore();
 const isZhLocale = computed(() => locale.value.startsWith("zh"));
+const themeOptions = THEME_OPTIONS;
 
 function localText(zh: string, en: string): string {
   return isZhLocale.value ? zh : en;
@@ -8221,6 +8255,7 @@ const form = reactive<SettingsForm>({
     endpoint: string;
     description: string;
   }>,
+  theme_primary_color: "teal",
   frontend_url: "",
   smtp_host: "",
   smtp_port: 587,
@@ -9551,6 +9586,7 @@ async function saveSettings() {
       table_page_size_options: form.table_page_size_options,
       custom_menu_items: form.custom_menu_items,
       custom_endpoints: form.custom_endpoints,
+      theme_primary_color: form.theme_primary_color,
       frontend_url: form.frontend_url,
       smtp_host: form.smtp_host,
       smtp_port: form.smtp_port,

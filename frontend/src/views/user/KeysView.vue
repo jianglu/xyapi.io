@@ -562,6 +562,37 @@
           </Select>
         </div>
 
+        <!-- Status (edit mode only, stays outside advanced settings) -->
+        <div v-if="showEditModal">
+          <label class="input-label">{{ t('keys.statusLabel') }}</label>
+          <Select
+            v-model="formData.status"
+            :options="statusOptions"
+            :placeholder="t('keys.selectStatus')"
+          />
+        </div>
+
+        <!-- Advanced Settings Toggle -->
+        <div>
+          <button
+            type="button"
+            @click="showAdvancedSettings = !showAdvancedSettings"
+            class="flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-dark-600 dark:text-gray-300 dark:hover:bg-dark-800"
+          >
+            <span>{{ t('keys.advancedSettings') }}</span>
+            <svg
+              class="h-4 w-4 transition-transform"
+              :class="showAdvancedSettings ? 'rotate-180' : ''"
+              fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Advanced Settings Content -->
+        <div v-if="showAdvancedSettings" class="space-y-5 rounded-lg border border-gray-200 p-4 dark:border-dark-600">
+
         <!-- Custom Key Section (only for create) -->
         <div v-if="!showEditModal" class="space-y-3">
           <div class="flex items-center justify-between">
@@ -593,15 +624,6 @@
             <p v-if="customKeyError" class="mt-1 text-sm text-red-500">{{ customKeyError }}</p>
             <p v-else class="input-hint">{{ t('keys.customKeyHint') }}</p>
           </div>
-        </div>
-
-        <div v-if="showEditModal">
-          <label class="input-label">{{ t('keys.statusLabel') }}</label>
-          <Select
-            v-model="formData.status"
-            :options="statusOptions"
-            :placeholder="t('keys.selectStatus')"
-          />
         </div>
 
         <!-- IP Restriction Section -->
@@ -962,6 +984,10 @@
             </div>
           </div>
         </div>
+
+        </div>
+        <!-- End Advanced Settings -->
+
       </form>
       <template #footer>
         <div class="flex justify-end gap-3">
@@ -1313,6 +1339,7 @@ const filterGroupId = ref<string | number>('')
 
 const showCreateModal = ref(false)
 const showEditModal = ref(false)
+const showAdvancedSettings = ref(false)
 const showDeleteDialog = ref(false)
 const showResetQuotaDialog = ref(false)
 const showResetRateLimitDialog = ref(false)
@@ -1656,6 +1683,7 @@ const editKey = (key: ApiKey) => {
     expiration_date: key.expires_at ? formatDateTimeLocal(key.expires_at) : ''
   }
   showEditModal.value = true
+  showAdvancedSettings.value = true
 }
 
 const toggleKeyStatus = async (key: ApiKey) => {
@@ -1866,6 +1894,7 @@ const handleDelete = async () => {
 const closeModals = () => {
   showCreateModal.value = false
   showEditModal.value = false
+  showAdvancedSettings.value = false
   selectedKey.value = null
   formData.value = {
     name: '',

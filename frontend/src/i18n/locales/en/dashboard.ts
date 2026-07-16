@@ -96,6 +96,7 @@ export default {
     copyToClipboard: 'Copy to clipboard',
     copied: 'Copied!',
     importToCcSwitch: 'CC Switch',
+    advancedSettings: 'Advanced Settings',
     enable: 'Enable',
     disable: 'Disable',
     nameLabel: 'Name',

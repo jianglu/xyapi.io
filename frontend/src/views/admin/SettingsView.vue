@@ -5444,7 +5444,7 @@
                         borderRadius: opt.id === 'none' ? '0' : opt.id === 'sm' ? '0.125rem' : opt.id === 'md' ? '0.375rem' : opt.id === 'lg' ? '0.5rem' : '0.75rem'
                       }"
                     ></span>
-                    {{ t(`admin.settings.site.radius${opt.label}`) }}
+                    {{ t(`admin.settings.site.radius${opt.id.charAt(0).toUpperCase() + opt.id.slice(1)}`) }}
                   </button>
                 </div>
                 <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">

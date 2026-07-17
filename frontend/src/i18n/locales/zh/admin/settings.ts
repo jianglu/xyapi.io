@@ -4,6 +4,7 @@ export default {
       description: '管理注册、邮箱验证、默认值和 SMTP 设置',
       tabs: {
         general: '通用设置',
+        theme: '主题设置',
         agreement: '登录条款',
         features: '功能开关',
         security: '安全与认证',
@@ -415,6 +416,9 @@ export default {
         testResultTitle: '搜索结果',
         testResultProvider: '服务商',
         testNoResults: '无搜索结果',
+      },
+      theme: {
+        description: '自定义全站主题配色、圆角尺寸、基础色调、内容密度与字体等外观设置',
       },
       site: {
         title: '站点设置',

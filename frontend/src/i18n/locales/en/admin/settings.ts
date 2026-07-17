@@ -4,6 +4,7 @@ export default {
       description: 'Manage registration, email verification, default values, and SMTP settings',
       tabs: {
         general: 'General',
+        theme: 'Theme',
         agreement: 'Agreement',
         features: 'Feature Switches',
         security: 'Security',
@@ -421,6 +422,9 @@ export default {
         testResultTitle: 'Search Results',
         testResultProvider: 'Provider',
         testNoResults: 'No results found',
+      },
+      theme: {
+        description: 'Customize site-wide appearance: theme color, border radius, base color, content density, and font.',
       },
       site: {
         title: 'Site Settings',

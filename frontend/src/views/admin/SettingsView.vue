@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <div class="mx-auto max-w-7xl space-y-6">
+    <div class="space-y-6">
       <!-- Loading State -->
       <div v-if="loading" class="flex items-center justify-center py-12">
         <div
@@ -5092,6 +5092,161 @@
         <!-- /Tab: Gateway — Claude Code, Scheduling -->
 
         <!-- Tab: General -->
+        <div v-show="activeTab === 'theme'" class="space-y-6">
+          <!-- Theme / Appearance Settings -->
+          <div class="card">
+            <div
+              class="border-b border-gray-100 px-6 py-4 dark:border-dark-700"
+            >
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                {{ t("admin.settings.tabs.theme") }}
+              </h2>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {{ t("admin.settings.theme.description") }}
+              </p>
+            </div>
+            <div class="space-y-6 p-6">
+              <!-- Theme Primary Color -->
+              <div>
+                <label
+                  class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  {{ t("admin.settings.site.themePrimaryColor") }}
+                </label>
+                <div class="grid grid-cols-4 gap-2 sm:grid-cols-7">
+                  <button
+                    v-for="theme in themeOptions"
+                    :key="theme.id"
+                    type="button"
+                    class="group flex flex-col items-center gap-1.5 rounded-lg p-2 transition-all"
+                    :class="
+                      form.theme_primary_color === theme.id
+                        ? 'bg-primary-50 ring-2 ring-primary-500 dark:bg-primary-900/20'
+                        : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                    "
+                    @click="form.theme_primary_color = theme.id"
+                  >
+                    <span
+                      class="block h-8 w-8 rounded-full ring-2 ring-offset-2 transition-all"
+                      :class="form.theme_primary_color === theme.id
+                        ? 'ring-primary-500 ring-offset-white dark:ring-offset-gray-900'
+                        : 'ring-transparent ring-offset-white dark:ring-offset-gray-900 group-hover:ring-gray-300 dark:group-hover:ring-gray-600'"
+                      :style="{ backgroundColor: theme.color }"
+                    ></span>
+                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400">{{ theme.label }}</span>
+                  </button>
+                </div>
+                <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t("admin.settings.site.themePrimaryColorHint") }}
+                </p>
+              </div>
+
+              <!-- Border Radius -->
+              <div>
+                <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ t("admin.settings.site.themeRadius") }}
+                </label>
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    v-for="opt in radiusOptions"
+                    :key="opt.id"
+                    type="button"
+                    class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-all"
+                    :class="form.theme_radius === opt.id
+                      ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500'"
+                    @click="form.theme_radius = opt.id"
+                  >
+                    <span
+                      class="inline-block h-4 w-4 border border-gray-400 dark:border-gray-500"
+                      :style="{
+                        borderRadius: opt.id === 'none' ? '0' : opt.id === 'sm' ? '0.125rem' : opt.id === 'md' ? '0.375rem' : opt.id === 'lg' ? '0.5rem' : '0.75rem'
+                      }"
+                    ></span>
+                    {{ t(`admin.settings.site.radius${opt.id.charAt(0).toUpperCase() + opt.id.slice(1)}`) }}
+                  </button>
+                </div>
+                <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t("admin.settings.site.themeRadiusHint") }}
+                </p>
+              </div>
+
+              <!-- Base Color -->
+              <div>
+                <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ t("admin.settings.site.themeBaseColor") }}
+                </label>
+                <div class="flex flex-wrap gap-3">
+                  <button
+                    v-for="opt in baseColorOptions"
+                    :key="opt.id"
+                    type="button"
+                    class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-all"
+                    :class="form.theme_base_color === opt.id
+                      ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500'"
+                    @click="form.theme_base_color = opt.id"
+                  >
+                    <span class="inline-block h-4 w-4 rounded-full" :style="{ backgroundColor: opt.color }"></span>
+                    {{ opt.label }}
+                  </button>
+                </div>
+                <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t("admin.settings.site.themeBaseColorHint") }}
+                </p>
+              </div>
+
+              <!-- Content Density -->
+              <div>
+                <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ t("admin.settings.site.themeDensity") }}
+                </label>
+                <div class="flex flex-wrap gap-3">
+                  <button
+                    v-for="opt in densityOptions"
+                    :key="opt.id"
+                    type="button"
+                    class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-all"
+                    :class="form.theme_density === opt.id
+                      ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500'"
+                    @click="form.theme_density = opt.id"
+                  >
+                    {{ opt.id === 'comfortable' ? t('admin.settings.site.densityComfortable') : t('admin.settings.site.densityCompact') }}
+                  </button>
+                </div>
+                <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t("admin.settings.site.themeDensityHint") }}
+                </p>
+              </div>
+
+              <!-- Font Family -->
+              <div>
+                <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ t("admin.settings.site.themeFontFamily") }}
+                </label>
+                <div class="flex flex-wrap gap-3">
+                  <button
+                    v-for="opt in fontFamilyOptions"
+                    :key="opt.id"
+                    type="button"
+                    class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-all"
+                    :class="form.theme_font_family === opt.id
+                      ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500'"
+                    @click="form.theme_font_family = opt.id"
+                  >
+                    {{ opt.label }}
+                  </button>
+                </div>
+                <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t("admin.settings.site.themeFontFamilyHint") }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div v-show="activeTab === 'general'" class="space-y-6">
           <!-- Site Settings -->
           <div class="card">
@@ -5353,144 +5508,6 @@
                   </svg>
                   {{ t("admin.settings.site.customEndpoints.add") }}
                 </button>
-              </div>
-
-              <!-- Theme Primary Color -->
-              <div>
-                <label
-                  class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                  {{ t("admin.settings.site.themePrimaryColor") }}
-                </label>
-                <div class="grid grid-cols-4 gap-2 sm:grid-cols-7">
-                  <button
-                    v-for="theme in themeOptions"
-                    :key="theme.id"
-                    type="button"
-                    class="group flex flex-col items-center gap-1.5 rounded-lg p-2 transition-all"
-                    :class="
-                      form.theme_primary_color === theme.id
-                        ? 'bg-primary-50 ring-2 ring-primary-500 dark:bg-primary-900/20'
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-800'
-                    "
-                    @click="form.theme_primary_color = theme.id"
-                  >
-                    <span
-                      class="block h-8 w-8 rounded-full ring-2 ring-offset-2 transition-all"
-                      :class="form.theme_primary_color === theme.id
-                        ? 'ring-primary-500 ring-offset-white dark:ring-offset-gray-900'
-                        : 'ring-transparent ring-offset-white dark:ring-offset-gray-900 group-hover:ring-gray-300 dark:group-hover:ring-gray-600'"
-                      :style="{ backgroundColor: theme.color }"
-                    ></span>
-                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400">{{ theme.label }}</span>
-                  </button>
-                </div>
-                <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
-                  {{ t("admin.settings.site.themePrimaryColorHint") }}
-                </p>
-              </div>
-
-              <!-- Border Radius -->
-              <div>
-                <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {{ t("admin.settings.site.themeRadius") }}
-                </label>
-                <div class="flex flex-wrap gap-2">
-                  <button
-                    v-for="opt in radiusOptions"
-                    :key="opt.id"
-                    type="button"
-                    class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-all"
-                    :class="form.theme_radius === opt.id
-                      ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300'
-                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500'"
-                    @click="form.theme_radius = opt.id"
-                  >
-                    <span
-                      class="inline-block h-4 w-4 border border-gray-400 dark:border-gray-500"
-                      :style="{
-                        borderRadius: opt.id === 'none' ? '0' : opt.id === 'sm' ? '0.125rem' : opt.id === 'md' ? '0.375rem' : opt.id === 'lg' ? '0.5rem' : '0.75rem'
-                      }"
-                    ></span>
-                    {{ t(`admin.settings.site.radius${opt.id.charAt(0).toUpperCase() + opt.id.slice(1)}`) }}
-                  </button>
-                </div>
-                <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
-                  {{ t("admin.settings.site.themeRadiusHint") }}
-                </p>
-              </div>
-
-              <!-- Base Color -->
-              <div>
-                <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {{ t("admin.settings.site.themeBaseColor") }}
-                </label>
-                <div class="flex flex-wrap gap-3">
-                  <button
-                    v-for="opt in baseColorOptions"
-                    :key="opt.id"
-                    type="button"
-                    class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-all"
-                    :class="form.theme_base_color === opt.id
-                      ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300'
-                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500'"
-                    @click="form.theme_base_color = opt.id"
-                  >
-                    <span class="inline-block h-4 w-4 rounded-full" :style="{ backgroundColor: opt.color }"></span>
-                    {{ opt.label }}
-                  </button>
-                </div>
-                <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
-                  {{ t("admin.settings.site.themeBaseColorHint") }}
-                </p>
-              </div>
-
-              <!-- Content Density -->
-              <div>
-                <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {{ t("admin.settings.site.themeDensity") }}
-                </label>
-                <div class="flex flex-wrap gap-3">
-                  <button
-                    v-for="opt in densityOptions"
-                    :key="opt.id"
-                    type="button"
-                    class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-all"
-                    :class="form.theme_density === opt.id
-                      ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300'
-                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500'"
-                    @click="form.theme_density = opt.id"
-                  >
-                    {{ opt.id === 'comfortable' ? t('admin.settings.site.densityComfortable') : t('admin.settings.site.densityCompact') }}
-                  </button>
-                </div>
-                <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
-                  {{ t("admin.settings.site.themeDensityHint") }}
-                </p>
-              </div>
-
-              <!-- Font Family -->
-              <div>
-                <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {{ t("admin.settings.site.themeFontFamily") }}
-                </label>
-                <div class="flex flex-wrap gap-3">
-                  <button
-                    v-for="opt in fontFamilyOptions"
-                    :key="opt.id"
-                    type="button"
-                    class="flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm font-medium transition-all"
-                    :class="form.theme_font_family === opt.id
-                      ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-300'
-                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500'"
-                    @click="form.theme_font_family = opt.id"
-                  >
-                    {{ opt.label }}
-                  </button>
-                </div>
-                <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
-                  {{ t("admin.settings.site.themeFontFamilyHint") }}
-                </p>
               </div>
 
               <!-- Contact Info -->
@@ -7655,6 +7672,7 @@ const paymentMethodsHref = computed(() =>
 
 type SettingsTab =
   | "general"
+  | "theme"
   | "agreement"
   | "features"
   | "security"
@@ -7665,6 +7683,7 @@ type SettingsTab =
   | "backup";
 const settingsTabKeys: SettingsTab[] = [
   "general",
+  "theme",
   "agreement",
   "features",
   "security",

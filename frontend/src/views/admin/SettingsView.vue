@@ -7591,7 +7591,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { THEME_OPTIONS, RADIUS_OPTIONS, BASE_COLOR_OPTIONS, DENSITY_OPTIONS, FONT_FAMILY_OPTIONS } from "@/composables/useTheme";
+import { THEME_OPTIONS, RADIUS_OPTIONS, BASE_COLOR_OPTIONS, DENSITY_OPTIONS, FONT_FAMILY_OPTIONS, initTheme } from "@/composables/useTheme";
 import { adminAPI } from "@/api";
 import {
   appendAuthSourceDefaultsToUpdateRequest,
@@ -9992,6 +9992,14 @@ async function saveSettings() {
       }
     }
     Object.assign(authSourceDefaults, buildAuthSourceDefaultsState(updated));
+    // 保存后立即应用外观设置（主题色/圆角/基础色调/密度/字体），无需刷新页面
+    initTheme(
+      form.theme_primary_color,
+      form.theme_radius,
+      form.theme_base_color,
+      form.theme_density,
+      form.theme_font_family,
+    );
     form.default_platform_quotas = normalizePlatformQuotasMap(updated.default_platform_quotas);
     registrationEmailSuffixWhitelistTags.value =
       normalizeRegistrationEmailSuffixDomains(

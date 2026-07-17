@@ -143,6 +143,10 @@ type UpdateSettingsRequest struct {
 	CustomMenuItems             *[]dto.CustomMenuItem `json:"custom_menu_items"`
 	CustomEndpoints             *[]dto.CustomEndpoint `json:"custom_endpoints"`
 	ThemePrimaryColor           string                `json:"theme_primary_color"`
+	ThemeRadius                 string                `json:"theme_radius"`
+	ThemeBaseColor              string                `json:"theme_base_color"`
+	ThemeDensity                string                `json:"theme_density"`
+	ThemeFontFamily             string                `json:"theme_font_family"`
 
 	// 默认配置
 	DefaultConcurrency                        int                               `json:"default_concurrency"`
@@ -1285,6 +1289,10 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 		CustomMenuItems:                        customMenuJSON,
 		CustomEndpoints:                        customEndpointsJSON,
 			ThemePrimaryColor:                     req.ThemePrimaryColor,
+		ThemeRadius:                           req.ThemeRadius,
+		ThemeBaseColor:                        req.ThemeBaseColor,
+		ThemeDensity:                          req.ThemeDensity,
+		ThemeFontFamily:                       req.ThemeFontFamily,
 		DefaultConcurrency:                     req.DefaultConcurrency,
 		DefaultBalance:                         req.DefaultBalance,
 		AffiliateRebateRate:                    affiliateRebateRate,
@@ -1808,6 +1816,10 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 		CustomMenuItems:                                        dto.ParseCustomMenuItems(updatedSettings.CustomMenuItems),
 		CustomEndpoints:                                        dto.ParseCustomEndpoints(updatedSettings.CustomEndpoints),
 		ThemePrimaryColor:                                     updatedSettings.ThemePrimaryColor,
+		ThemeRadius:                                           updatedSettings.ThemeRadius,
+		ThemeBaseColor:                                        updatedSettings.ThemeBaseColor,
+		ThemeDensity:                                          updatedSettings.ThemeDensity,
+		ThemeFontFamily:                                       updatedSettings.ThemeFontFamily,
 		DefaultConcurrency:                                     updatedSettings.DefaultConcurrency,
 		DefaultBalance:                                         updatedSettings.DefaultBalance,
 		AffiliateRebateRate:                                    updatedSettings.AffiliateRebateRate,

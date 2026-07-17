@@ -554,6 +554,10 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/admin/settings',
+    redirect: '/admin/settings/general'
+  },
+  {
+    path: '/admin/settings/:tab',
     name: 'AdminSettings',
     component: () => import('@/views/admin/SettingsView.vue'),
     meta: {

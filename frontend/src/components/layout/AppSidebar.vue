@@ -522,6 +522,51 @@ const CogIcon = {
     )
 }
 
+// 系统设置子菜单图标
+const SettingsDocumentIcon = {
+  render: () =>
+    h('svg', { fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor', 'stroke-width': '1.5' }, [
+      h('path', {
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round',
+        d: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
+      })
+    ])
+}
+
+const SettingsBoltIcon = {
+  render: () =>
+    h('svg', { fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor', 'stroke-width': '1.5' }, [
+      h('path', {
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round',
+        d: 'M13 10V3L4 14h7v7l9-11h-7z'
+      })
+    ])
+}
+
+const SettingsMailIcon = {
+  render: () =>
+    h('svg', { fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor', 'stroke-width': '1.5' }, [
+      h('path', {
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round',
+        d: 'M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75'
+      })
+    ])
+}
+
+const SettingsDatabaseIcon = {
+  render: () =>
+    h('svg', { fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor', 'stroke-width': '1.5' }, [
+      h('path', {
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round',
+        d: 'M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75'
+      })
+    ])
+}
+
 const SunIcon = {
   render: () =>
     h(
@@ -806,18 +851,37 @@ const adminNavItems = computed((): NavItem[] => {
 
   const visible = applyFeatureFlags(baseItems)
 
+  // 系统设置：可展开父菜单，子项对应各设置分区（仿照渠道管理子菜单）
+  const settingsItem: NavItem = {
+    path: '/admin/settings',
+    label: t('nav.settings'),
+    icon: CogIcon,
+    expandOnly: true,
+    children: [
+      { path: '/admin/settings/general', label: t('admin.settings.tabs.general'), icon: CogIcon },
+      { path: '/admin/settings/agreement', label: t('admin.settings.tabs.agreement'), icon: SettingsDocumentIcon },
+      { path: '/admin/settings/features', label: t('admin.settings.tabs.features'), icon: SettingsBoltIcon },
+      { path: '/admin/settings/security', label: t('admin.settings.tabs.security'), icon: ShieldIcon },
+      { path: '/admin/settings/users', label: t('admin.settings.tabs.users'), icon: UsersIcon },
+      { path: '/admin/settings/gateway', label: t('admin.settings.tabs.gateway'), icon: ServerIcon },
+      { path: '/admin/settings/payment', label: t('admin.settings.tabs.payment'), icon: CreditCardIcon },
+      { path: '/admin/settings/email', label: t('admin.settings.tabs.email'), icon: SettingsMailIcon },
+      { path: '/admin/settings/backup', label: t('admin.settings.tabs.backup'), icon: SettingsDatabaseIcon },
+    ],
+  }
+
   // 简单模式下，在系统设置前插入 API密钥
   if (authStore.isSimpleMode) {
     const filtered = visible.filter(item => !item.hideInSimpleMode)
     filtered.push({ path: '/keys', label: t('nav.apiKeys'), icon: KeyIcon })
-    filtered.push({ path: '/admin/settings', label: t('nav.settings'), icon: CogIcon })
+    filtered.push(settingsItem)
     for (const cm of customMenuItemsForAdmin.value) {
       filtered.push({ path: `/custom/${cm.id}`, label: cm.label, icon: null, iconSvg: cm.icon_svg })
     }
     return filtered
   }
 
-  visible.push({ path: '/admin/settings', label: t('nav.settings'), icon: CogIcon })
+  visible.push(settingsItem)
   for (const cm of customMenuItemsForAdmin.value) {
     visible.push({ path: `/custom/${cm.id}`, label: cm.label, icon: null, iconSvg: cm.icon_svg })
   }

@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -89,6 +90,15 @@ func NewWxpay(instanceID string, config map[string]string) (*Wxpay, error) {
 			return nil, infraerrors.BadRequest("WXPAY_CONFIG_MISSING_KEY", "missing_required_key").
 				WithMetadata(map[string]string{"key": k})
 		}
+	}
+	const wxpayAPIv3KeyLength = 32
+	if len(config["apiV3Key"]) != wxpayAPIv3KeyLength {
+		return nil, infraerrors.BadRequest("WXPAY_CONFIG_INVALID_KEY_LENGTH", "invalid_key_length").
+			WithMetadata(map[string]string{
+				"key":      "apiV3Key",
+				"expected": strconv.Itoa(wxpayAPIv3KeyLength),
+				"actual":   strconv.Itoa(len(config["apiV3Key"])),
+			})
 	}
 	// Parse PEMs eagerly so malformed keys surface at save time, not at order creation.
 	if _, err := utils.LoadPrivateKey(formatPEM(config["privateKey"], "PRIVATE KEY")); err != nil {

@@ -586,8 +586,173 @@ export function applyTheme(preset: ThemePreset) {
 /**
  * Initialize theme from a preset name (typically from server public settings).
  * Falls back to "teal" if the preset is invalid.
+ * Also applies radius, base color, density, and font family appearance settings.
  */
-export function initTheme(preset?: string) {
+export function initTheme(
+  preset?: string,
+  radius?: string,
+  baseColor?: string,
+  density?: string,
+  fontFamily?: string,
+) {
   const valid = THEME_OPTIONS.find(o => o.id === preset)
   applyTheme((valid?.id ?? 'teal') as ThemePreset)
+  applyRadius(radius || 'md')
+  applyBaseColor(baseColor || 'zinc')
+  applyDensity(density || 'comfortable')
+  applyFontFamily(fontFamily || 'system')
+}
+
+// ===== Appearance: Border Radius =====
+
+export type RadiusScale = 'none' | 'sm' | 'md' | 'lg' | 'xl'
+
+export const RADIUS_OPTIONS: { id: RadiusScale; label: string }[] = [
+  { id: 'none', label: 'None' },
+  { id: 'sm', label: 'Small' },
+  { id: 'md', label: 'Medium' },
+  { id: 'lg', label: 'Large' },
+  { id: 'xl', label: 'Extra Large' },
+]
+
+/** Each scale defines 5 radius levels mapped to --radius-sm/md/lg/xl/2xl */
+const RADIUS_SCALES: Record<RadiusScale, [string, string, string, string, string]> = {
+  none: ['0rem', '0rem', '0rem', '0rem', '0rem'],
+  sm:   ['0.125rem', '0.25rem', '0.375rem', '0.5rem', '0.75rem'],
+  md:   ['0.375rem', '0.5rem', '0.75rem', '1rem', '1.5rem'],
+  lg:   ['0.5rem', '0.75rem', '1rem', '1.5rem', '2rem'],
+  xl:   ['0.75rem', '1rem', '1.5rem', '2rem', '2.5rem'],
+}
+
+export function applyRadius(scale: string) {
+  const root = document.documentElement
+  const s = RADIUS_SCALES[(scale as RadiusScale) || 'md'] || RADIUS_SCALES.md
+  root.style.setProperty('--radius-sm', s[0])
+  root.style.setProperty('--radius-md', s[1])
+  root.style.setProperty('--radius-lg', s[2])
+  root.style.setProperty('--radius-xl', s[3])
+  root.style.setProperty('--radius-2xl', s[4])
+}
+
+// ===== Appearance: Base Color =====
+
+export type BaseColor = 'slate' | 'gray' | 'zinc' | 'neutral' | 'stone'
+
+export const BASE_COLOR_OPTIONS: { id: BaseColor; label: string; color: string }[] = [
+  { id: 'slate',   label: 'Slate',   color: '#64748b' },
+  { id: 'gray',    label: 'Gray',    color: '#6b7280' },
+  { id: 'zinc',    label: 'Zinc',    color: '#71717a' },
+  { id: 'neutral', label: 'Neutral', color: '#737373' },
+  { id: 'stone',   label: 'Stone',   color: '#78716c' },
+]
+
+/** Full 50-950 scales for each base color (Tailwind palettes) */
+const BASE_COLOR_SCALES: Record<BaseColor, Record<string, string>> = {
+  slate: {
+    50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1',
+    400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155',
+    800: '#1e293b', 900: '#0f172a', 950: '#020617'
+  },
+  gray: {
+    50: '#f9fafb', 100: '#f3f4f6', 200: '#e5e7eb', 300: '#d1d5db',
+    400: '#9ca3af', 500: '#6b7280', 600: '#4b5563', 700: '#374151',
+    800: '#1f2937', 900: '#111827', 950: '#030712'
+  },
+  zinc: {
+    50: '#fafafa', 100: '#f4f4f5', 200: '#e4e4e7', 300: '#d4d4d8',
+    400: '#a1a1aa', 500: '#71717a', 600: '#52525b', 700: '#3f3f46',
+    800: '#27272a', 900: '#18181b', 950: '#09090b'
+  },
+  neutral: {
+    50: '#fafafa', 100: '#f5f5f5', 200: '#e5e5e5', 300: '#d4d4d4',
+    400: '#a3a3a3', 500: '#737373', 600: '#525252', 700: '#404040',
+    800: '#262626', 900: '#171717', 950: '#0a0a0a'
+  },
+  stone: {
+    50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1',
+    400: '#a8a29e', 500: '#78716c', 600: '#57534e', 700: '#44403c',
+    800: '#292524', 900: '#1c1917', 950: '#0c0a09'
+  },
+}
+
+export function applyBaseColor(color: string) {
+  const root = document.documentElement
+  const scale = BASE_COLOR_SCALES[(color as BaseColor) || 'zinc'] || BASE_COLOR_SCALES.zinc
+  for (const [shade, hex] of Object.entries(scale)) {
+    root.style.setProperty(`--color-dark-${shade}`, hex)
+    root.style.setProperty(`--color-dark-rgb-${shade}`, hexToRgbSpace(hex))
+  }
+}
+
+// ===== Appearance: Content Density =====
+
+export type DensityMode = 'comfortable' | 'compact'
+
+export const DENSITY_OPTIONS: { id: DensityMode; label: string }[] = [
+  { id: 'comfortable', label: 'Comfortable' },
+  { id: 'compact', label: 'Compact' },
+]
+
+const DENSITY_VALUES: Record<DensityMode, Record<string, string>> = {
+  comfortable: {
+    '--spacing-btn-y': '0.625rem',
+    '--spacing-btn-x': '1rem',
+    '--spacing-input-y': '0.625rem',
+    '--spacing-input-x': '1rem',
+    '--spacing-card': '1.25rem',
+    '--spacing-gap': '1.25rem',
+  },
+  compact: {
+    '--spacing-btn-y': '0.375rem',
+    '--spacing-btn-x': '0.75rem',
+    '--spacing-input-y': '0.375rem',
+    '--spacing-input-x': '0.75rem',
+    '--spacing-card': '0.75rem',
+    '--spacing-gap': '0.75rem',
+  },
+}
+
+export function applyDensity(density: string) {
+  const root = document.documentElement
+  const values = DENSITY_VALUES[(density as DensityMode) || 'comfortable'] || DENSITY_VALUES.comfortable
+  for (const [key, value] of Object.entries(values)) {
+    root.style.setProperty(key, value)
+  }
+}
+
+// ===== Appearance: Font Family =====
+
+export type FontFamilyPreset = 'system' | 'inter' | 'geist' | 'jetbrains'
+
+export const FONT_FAMILY_OPTIONS: { id: FontFamilyPreset; label: string }[] = [
+  { id: 'system', label: 'System UI' },
+  { id: 'inter', label: 'Inter' },
+  { id: 'geist', label: 'Geist' },
+  { id: 'jetbrains', label: 'JetBrains Mono' },
+]
+
+const FONT_FAMILIES: Record<FontFamilyPreset, { sans: string; mono: string }> = {
+  system: {
+    sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
+    mono: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+  },
+  inter: {
+    sans: "'Inter', system-ui, -apple-system, sans-serif",
+    mono: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+  },
+  geist: {
+    sans: "'Geist', system-ui, -apple-system, sans-serif",
+    mono: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+  },
+  jetbrains: {
+    sans: "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    mono: "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+  },
+}
+
+export function applyFontFamily(font: string) {
+  const root = document.documentElement
+  const ff = FONT_FAMILIES[(font as FontFamilyPreset) || 'system'] || FONT_FAMILIES.system
+  root.style.setProperty('--font-sans', ff.sans)
+  root.style.setProperty('--font-mono', ff.mono)
 }

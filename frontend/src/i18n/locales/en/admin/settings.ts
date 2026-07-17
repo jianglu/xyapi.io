@@ -479,7 +479,22 @@ export default {
         hideCcsImportButton: 'Hide CC Switch Button',
         hideCcsImportButtonHint: 'When enabled, the "CC Switch" button will be hidden on the API Keys page',
         themePrimaryColor: 'Theme Color',
-        themePrimaryColorHint: 'Select the brand primary color for the site. Uses a shadcn-style semantic color system.'
+        themePrimaryColorHint: 'Select the brand primary color for the site. Uses a shadcn-style semantic color system.',
+        themeRadius: 'Border Radius',
+        themeRadiusHint: 'Controls the corner radius of buttons, cards, inputs, and other components.',
+        themeBaseColor: 'Base Color',
+        themeBaseColorHint: 'Controls the base neutral color palette for dark mode backgrounds and borders.',
+        themeDensity: 'Content Density',
+        themeDensityHint: 'Controls the padding compactness of buttons, inputs, and cards.',
+        themeFontFamily: 'Font Family',
+        themeFontFamilyHint: 'Select the font used across the site.',
+        radiusNone: 'None',
+        radiusSm: 'Small',
+        radiusMd: 'Medium',
+        radiusLg: 'Large',
+        radiusXl: 'Extra Large',
+        densityComfortable: 'Comfortable',
+        densityCompact: 'Compact'
       },
       purchase: {
         title: 'Recharge / Subscription Page',

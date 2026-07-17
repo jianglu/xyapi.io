@@ -475,7 +475,22 @@ export default {
         hideCcsImportButton: '隐藏 CC Switch 按钮',
         hideCcsImportButtonHint: '启用后将在 API Keys 页面隐藏"CC Switch"按钮',
         themePrimaryColor: '主题配色',
-        themePrimaryColorHint: '选择站点品牌主色调，全站统一生效。包含 shadcn 风格的语义化配色方案。'
+        themePrimaryColorHint: '选择站点品牌主色调，全站统一生效。包含 shadcn 风格的语义化配色方案。',
+        themeRadius: '圆角尺寸',
+        themeRadiusHint: '控制全站按钮、卡片、输入框等组件的圆角大小。',
+        themeBaseColor: '基础色调',
+        themeBaseColorHint: '控制深色模式背景和中性色的基础色调。',
+        themeDensity: '内容密度',
+        themeDensityHint: '控制按钮、输入框和卡片的内边距紧凑程度。',
+        themeFontFamily: '字体族',
+        themeFontFamilyHint: '选择全站使用的字体。',
+        radiusNone: '无',
+        radiusSm: '小',
+        radiusMd: '中',
+        radiusLg: '大',
+        radiusXl: '特大',
+        densityComfortable: '舒适',
+        densityCompact: '紧凑'
       },
       purchase: {
         title: '充值/订阅页面',

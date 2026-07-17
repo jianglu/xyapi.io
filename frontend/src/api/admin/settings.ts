@@ -441,6 +441,10 @@ export interface SystemSettings {
   custom_menu_items: CustomMenuItem[];
   custom_endpoints: CustomEndpoint[];
   theme_primary_color: string;
+  theme_radius: string;
+  theme_base_color: string;
+  theme_density: string;
+  theme_font_family: string;
   smtp_host: string;
   smtp_port: number;
   smtp_username: string;
@@ -743,6 +747,10 @@ export interface UpdateSettingsRequest {
   custom_menu_items?: CustomMenuItem[];
   custom_endpoints?: CustomEndpoint[];
   theme_primary_color?: string;
+  theme_radius?: string;
+  theme_base_color?: string;
+  theme_density?: string;
+  theme_font_family?: string;
   smtp_host?: string;
   smtp_port?: number;
   smtp_username?: string;

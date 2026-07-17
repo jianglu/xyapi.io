@@ -143,6 +143,10 @@ type SystemSettings struct {
 	CustomMenuItems             []CustomMenuItem `json:"custom_menu_items"`
 	CustomEndpoints             []CustomEndpoint `json:"custom_endpoints"`
 	ThemePrimaryColor           string           `json:"theme_primary_color"`
+	ThemeRadius                 string           `json:"theme_radius"`
+	ThemeBaseColor              string           `json:"theme_base_color"`
+	ThemeDensity                string           `json:"theme_density"`
+	ThemeFontFamily             string           `json:"theme_font_family"`
 
 	DefaultConcurrency           int                          `json:"default_concurrency"`
 	DefaultBalance               float64                      `json:"default_balance"`
@@ -339,6 +343,10 @@ type PublicSettings struct {
 	CustomMenuItems                  []CustomMenuItem         `json:"custom_menu_items"`
 	CustomEndpoints                  []CustomEndpoint         `json:"custom_endpoints"`
 	ThemePrimaryColor                string                   `json:"theme_primary_color"`
+	ThemeRadius                      string                   `json:"theme_radius"`
+	ThemeBaseColor                   string                   `json:"theme_base_color"`
+	ThemeDensity                     string                   `json:"theme_density"`
+	ThemeFontFamily                  string                   `json:"theme_font_family"`
 	DingTalkOAuthEnabled             bool                     `json:"dingtalk_oauth_enabled"`
 	LinuxDoOAuthEnabled              bool                     `json:"linuxdo_oauth_enabled"`
 	WeChatOAuthEnabled               bool                     `json:"wechat_oauth_enabled"`

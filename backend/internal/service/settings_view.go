@@ -143,6 +143,10 @@ type SystemSettings struct {
 	CustomMenuItems             string // JSON array of custom menu items
 	CustomEndpoints             string // JSON array of custom endpoints
 	ThemePrimaryColor           string // 主题品牌色（teal/blue/purple/orange/red）
+	ThemeRadius                 string
+	ThemeBaseColor              string
+	ThemeDensity                string
+	ThemeFontFamily             string
 
 	DefaultConcurrency           int
 	DefaultBalance               float64
@@ -306,6 +310,10 @@ type PublicSettings struct {
 	CustomMenuItems             string // JSON array of custom menu items
 	CustomEndpoints             string // JSON array of custom endpoints
 	ThemePrimaryColor           string // 主题品牌色（teal/blue/purple/orange/red）
+	ThemeRadius                 string
+	ThemeBaseColor              string
+	ThemeDensity                string
+	ThemeFontFamily             string
 
 	LinuxDoOAuthEnabled      bool
 	DingTalkOAuthEnabled     bool

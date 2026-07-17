@@ -62,24 +62,24 @@ export default {
         border: 'hsl(var(--border) / <alpha-value>)',
         input: 'hsl(var(--input) / <alpha-value>)',
         ring: 'hsl(var(--ring) / <alpha-value>)',
-        // 深色模式背景
+        // 深色模式背景 - 通过 CSS Variables 切换基础色调
         dark: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-          950: '#020617'
+          50:  'rgb(var(--color-dark-rgb-50) / <alpha-value>)',
+          100: 'rgb(var(--color-dark-rgb-100) / <alpha-value>)',
+          200: 'rgb(var(--color-dark-rgb-200) / <alpha-value>)',
+          300: 'rgb(var(--color-dark-rgb-300) / <alpha-value>)',
+          400: 'rgb(var(--color-dark-rgb-400) / <alpha-value>)',
+          500: 'rgb(var(--color-dark-rgb-500) / <alpha-value>)',
+          600: 'rgb(var(--color-dark-rgb-600) / <alpha-value>)',
+          700: 'rgb(var(--color-dark-rgb-700) / <alpha-value>)',
+          800: 'rgb(var(--color-dark-rgb-800) / <alpha-value>)',
+          900: 'rgb(var(--color-dark-rgb-900) / <alpha-value>)',
+          950: 'rgb(var(--color-dark-rgb-950) / <alpha-value>)'
         }
       },
       fontFamily: {
         sans: [
-          'system-ui',
+          'var(--font-sans)',
           '-apple-system',
           'BlinkMacSystemFont',
           'Segoe UI',
@@ -91,7 +91,7 @@ export default {
           'Microsoft YaHei',
           'sans-serif'
         ],
-        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+        mono: ['var(--font-mono)', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
       },
       boxShadow: {
         glass: '0 8px 32px rgba(0, 0, 0, 0.08)',
@@ -155,6 +155,13 @@ export default {
         xs: '2px'
       },
       borderRadius: {
+        none: '0px',
+        sm: 'var(--radius-sm)',
+        md: 'var(--radius-md)',
+        lg: 'var(--radius-lg)',
+        xl: 'var(--radius-xl)',
+        '2xl': 'var(--radius-2xl)',
+        '3xl': '1.5rem',
         '4xl': '2rem'
       }
     }

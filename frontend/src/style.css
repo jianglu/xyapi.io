@@ -74,6 +74,50 @@
   --dark--border: 240 3.7% 15.9%;
   --dark--input: 240 3.7% 15.9%;
   --dark--ring: 172 76% 36%;
+
+  /* ===== Appearance: Border Radius ===== */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  /* ===== Appearance: Font Family ===== */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* ===== Appearance: Content Density ===== */
+  --spacing-btn-y: 0.625rem;
+  --spacing-btn-x: 1rem;
+  --spacing-input-y: 0.625rem;
+  --spacing-input-x: 1rem;
+  --spacing-card: 1.25rem;
+  --spacing-gap: 1.25rem;
+
+  /* ===== Appearance: Base Color (dark mode palette) ===== */
+  /* Default: zinc. Overridden at runtime by useTheme.ts applyBaseColor() */
+  --color-dark-50: #fafafa;
+  --color-dark-100: #f4f4f5;
+  --color-dark-200: #e4e4e7;
+  --color-dark-300: #d4d4d8;
+  --color-dark-400: #a1a1aa;
+  --color-dark-500: #71717a;
+  --color-dark-600: #52525b;
+  --color-dark-700: #3f3f46;
+  --color-dark-800: #27272a;
+  --color-dark-900: #18181b;
+  --color-dark-950: #09090b;
+  --color-dark-rgb-50: 250 250 250;
+  --color-dark-rgb-100: 244 244 245;
+  --color-dark-rgb-200: 228 228 231;
+  --color-dark-rgb-300: 212 212 216;
+  --color-dark-rgb-400: 161 161 170;
+  --color-dark-rgb-500: 113 113 122;
+  --color-dark-rgb-600: 82 82 91;
+  --color-dark-rgb-700: 63 63 70;
+  --color-dark-rgb-800: 39 39 42;
+  --color-dark-rgb-900: 24 24 27;
+  --color-dark-rgb-950: 9 9 11;
 }
 
 /* In dark mode, swap semantic variables to their --dark-* counterparts */
@@ -109,6 +153,7 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans);
     @apply min-h-screen;
   }
 
@@ -163,7 +208,9 @@
   /* ============ 按钮样式 ============ */
   .btn {
     @apply inline-flex items-center justify-center gap-2;
-    @apply rounded-xl px-4 py-2.5 text-sm font-medium;
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-btn-y) var(--spacing-btn-x);
+    @apply text-sm font-medium;
     @apply transition-all duration-200 ease-out;
     @apply focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:ring-offset-2;
     @apply disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50;
@@ -239,24 +286,30 @@
   }
 
   .btn-sm {
-    @apply rounded-lg px-3 py-1.5 text-xs;
+    border-radius: var(--radius-lg);
+    @apply px-3 py-1.5 text-xs;
   }
 
   .btn-md {
-    @apply rounded-xl px-4 py-2 text-sm;
+    border-radius: var(--radius-xl);
+    @apply px-4 py-2 text-sm;
   }
 
   .btn-lg {
-    @apply rounded-2xl px-6 py-3 text-base;
+    border-radius: var(--radius-2xl);
+    @apply px-6 py-3 text-base;
   }
 
   .btn-icon {
-    @apply rounded-xl p-2.5;
+    border-radius: var(--radius-xl);
+    @apply p-2.5;
   }
 
   /* ============ 输入框样式 ============ */
   .input {
-    @apply w-full rounded-xl px-4 py-2.5 text-sm;
+    @apply w-full text-sm;
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-input-y) var(--spacing-input-x);
     @apply bg-white dark:bg-dark-800;
     @apply border border-gray-200 dark:border-dark-600;
     @apply text-gray-900 dark:text-gray-100;
@@ -301,7 +354,7 @@
   .glass-card {
     @apply bg-white/70 dark:bg-dark-800/70;
     @apply backdrop-blur-xl;
-    @apply rounded-2xl;
+    border-radius: var(--radius-2xl);
     @apply border border-white/20 dark:border-dark-700/50;
     @apply shadow-glass;
     @apply transition-all duration-300;
@@ -310,7 +363,7 @@
   /* ============ 卡片样式 ============ */
   .card {
     @apply bg-white dark:bg-dark-800/50;
-    @apply rounded-2xl;
+    border-radius: var(--radius-2xl);
     @apply border border-gray-100 dark:border-dark-700/50;
     @apply shadow-card;
     @apply transition-all duration-300;
@@ -349,7 +402,8 @@
   }
 
   .stat-icon {
-    @apply h-12 w-12 rounded-xl;
+    @apply h-12 w-12;
+    border-radius: var(--radius-xl);
     @apply flex items-center justify-center;
     @apply text-xl;
   }
@@ -392,7 +446,8 @@
 
   /* ============ 表格样式 ============ */
   .table-container {
-    @apply overflow-x-auto rounded-xl border border-gray-200 dark:border-dark-700;
+    @apply overflow-x-auto border border-gray-200 dark:border-dark-700;
+    border-radius: var(--radius-xl);
   }
 
   .table {
@@ -455,7 +510,7 @@
   .dropdown {
     @apply absolute z-50;
     @apply bg-white dark:bg-dark-800;
-    @apply rounded-xl;
+    border-radius: var(--radius-xl);
     @apply border border-gray-200 dark:border-dark-700;
     @apply shadow-lg;
     @apply py-1;
@@ -481,7 +536,8 @@
     @apply w-full;
     @apply max-h-[95vh] sm:max-h-[90vh];
     @apply bg-white dark:bg-dark-800;
-    @apply rounded-2xl shadow-2xl;
+    border-radius: var(--radius-2xl);
+    @apply shadow-2xl;
     @apply border border-gray-200 dark:border-dark-700;
     @apply flex flex-col;
   }
@@ -573,7 +629,8 @@
   .dialog-container {
     @apply flex w-full flex-col;
     @apply max-h-[90vh];
-    @apply rounded-2xl bg-white dark:bg-dark-800;
+    border-radius: var(--radius-2xl);
+    @apply bg-white dark:bg-dark-800;
     @apply shadow-xl;
   }
 
@@ -597,7 +654,8 @@
     @apply fixed right-4 top-4 z-[100];
     @apply min-w-[320px] max-w-md;
     @apply bg-white dark:bg-dark-800;
-    @apply rounded-xl shadow-lg;
+    border-radius: var(--radius-xl);
+    @apply shadow-lg;
     @apply border-l-4;
     @apply p-4;
     @apply animate-slide-in-right;
@@ -643,7 +701,8 @@
   }
 
   .sidebar-link {
-    @apply flex items-center gap-3 rounded-xl py-2.5;
+    @apply flex items-center gap-3 py-2.5;
+    border-radius: var(--radius-xl);
     @apply overflow-hidden;
     @apply text-sm font-medium;
     @apply text-gray-600 dark:text-dark-300;
@@ -720,11 +779,13 @@
   /* ============ 标签页 ============ */
   .tabs {
     @apply flex gap-1 p-1;
-    @apply rounded-xl bg-gray-100 dark:bg-dark-800;
+    border-radius: var(--radius-xl);
+    @apply bg-gray-100 dark:bg-dark-800;
   }
 
   .tab {
-    @apply rounded-lg px-4 py-2 text-sm font-medium;
+    border-radius: var(--radius-lg);
+    @apply px-4 py-2 text-sm font-medium;
     @apply text-gray-600 dark:text-dark-400;
     @apply transition-all duration-200;
     @apply hover:text-gray-900 dark:hover:text-white;
@@ -778,7 +839,8 @@
   .code-block {
     @apply font-mono text-sm;
     @apply bg-gray-900 text-gray-100;
-    @apply overflow-x-auto rounded-xl p-4;
+    @apply overflow-x-auto p-4;
+    border-radius: var(--radius-xl);
   }
 
   /* ============ Tour Description ============ */

@@ -185,8 +185,12 @@ func (s *SettingService) GetPublicSettings(ctx context.Context) (*PublicSettings
 		SettingKeyTableDefaultPageSize,
 		SettingKeyTablePageSizeOptions,
 		SettingKeyCustomMenuItems,
-		SettingKeyCustomEndpoints,
+			SettingKeyCustomEndpoints,
 			SettingKeyThemePrimaryColor,
+		SettingKeyThemeRadius,
+		SettingKeyThemeBaseColor,
+		SettingKeyThemeDensity,
+		SettingKeyThemeFontFamily,
 		SettingKeyLinuxDoConnectEnabled,
 		SettingKeyDingTalkConnectEnabled,
 		SettingKeyWeChatConnectEnabled,
@@ -314,6 +318,10 @@ func (s *SettingService) GetPublicSettings(ctx context.Context) (*PublicSettings
 		CustomMenuItems:                  settings[SettingKeyCustomMenuItems],
 		CustomEndpoints:                  settings[SettingKeyCustomEndpoints],
 		ThemePrimaryColor:                settings[SettingKeyThemePrimaryColor],
+		ThemeRadius:                      settings[SettingKeyThemeRadius],
+		ThemeBaseColor:                   settings[SettingKeyThemeBaseColor],
+		ThemeDensity:                     settings[SettingKeyThemeDensity],
+		ThemeFontFamily:                  settings[SettingKeyThemeFontFamily],
 		LinuxDoOAuthEnabled:              linuxDoEnabled,
 		DingTalkOAuthEnabled:             dingTalkEnabled,
 		WeChatOAuthEnabled:               weChatEnabled,
@@ -473,6 +481,10 @@ type PublicSettingsInjectionPayload struct {
 	CustomMenuItems                  json.RawMessage          `json:"custom_menu_items"`
 	CustomEndpoints                  json.RawMessage          `json:"custom_endpoints"`
 	ThemePrimaryColor                string                   `json:"theme_primary_color"`
+	ThemeRadius                      string                   `json:"theme_radius"`
+	ThemeBaseColor                   string                   `json:"theme_base_color"`
+	ThemeDensity                     string                   `json:"theme_density"`
+	ThemeFontFamily                  string                   `json:"theme_font_family"`
 	LinuxDoOAuthEnabled              bool                     `json:"linuxdo_oauth_enabled"`
 	DingTalkOAuthEnabled             bool                     `json:"dingtalk_oauth_enabled"`
 	WeChatOAuthEnabled               bool                     `json:"wechat_oauth_enabled"`
@@ -544,6 +556,10 @@ func (s *SettingService) GetPublicSettingsForInjection(ctx context.Context) (any
 		CustomMenuItems:                  filterUserVisibleMenuItems(settings.CustomMenuItems),
 		CustomEndpoints:                  safeRawJSONArray(settings.CustomEndpoints),
 		ThemePrimaryColor:                settings.ThemePrimaryColor,
+		ThemeRadius:                      settings.ThemeRadius,
+		ThemeBaseColor:                   settings.ThemeBaseColor,
+		ThemeDensity:                     settings.ThemeDensity,
+		ThemeFontFamily:                  settings.ThemeFontFamily,
 		LinuxDoOAuthEnabled:              settings.LinuxDoOAuthEnabled,
 		DingTalkOAuthEnabled:             settings.DingTalkOAuthEnabled,
 		WeChatOAuthEnabled:               settings.WeChatOAuthEnabled,

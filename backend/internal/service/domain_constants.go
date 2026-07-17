@@ -263,7 +263,11 @@ const (
 	SettingKeyTablePageSizeOptions        = "table_page_size_options"       // 表格可选每页条数（JSON 数组）
 	SettingKeyCustomMenuItems             = "custom_menu_items"             // 自定义菜单项（JSON 数组）
 	SettingKeyCustomEndpoints             = "custom_endpoints"              // 自定义端点列表（JSON 数组）
-	SettingKeyThemePrimaryColor           = "theme_primary_color"          // 主题品牌色（teal/blue/purple/orange/red）
+	SettingKeyThemePrimaryColor           = "theme_primary_color"           // 主题品牌色（teal/blue/purple/orange/red）
+	SettingKeyThemeRadius                 = "theme_radius"                  // 圆角尺寸（none/sm/md/lg/xl）
+	SettingKeyThemeBaseColor              = "theme_base_color"              // 基础色调（slate/gray/zinc/neutral/stone）
+	SettingKeyThemeDensity                = "theme_density"                 // 内容密度（comfortable/compact）
+	SettingKeyThemeFontFamily             = "theme_font_family"             // 字体族（system/inter/geist/jetbrains）
 
 	// 默认配置
 	SettingKeyDefaultConcurrency   = "default_concurrency"    // 新用户默认并发量

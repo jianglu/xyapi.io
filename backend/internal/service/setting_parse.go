@@ -65,6 +65,10 @@ func (s *SettingService) InitializeDefaultSettings(ctx context.Context) error {
 		SettingKeyCustomMenuItems:                           "[]",
 		SettingKeyCustomEndpoints:                           "[]",
 		SettingKeyThemePrimaryColor:                         "teal",
+		SettingKeyThemeRadius:                               "md",
+		SettingKeyThemeBaseColor:                            "zinc",
+		SettingKeyThemeDensity:                              "comfortable",
+		SettingKeyThemeFontFamily:                           "system",
 		SettingKeyWeChatConnectEnabled:                      "false",
 		SettingKeyWeChatConnectAppID:                        "",
 		SettingKeyWeChatConnectAppSecret:                    "",
@@ -289,7 +293,11 @@ func (s *SettingService) parseSettings(settings map[string]string) *SystemSettin
 		PurchaseSubscriptionURL:          strings.TrimSpace(settings[SettingKeyPurchaseSubscriptionURL]),
 		CustomMenuItems:                  settings[SettingKeyCustomMenuItems],
 		CustomEndpoints:                  settings[SettingKeyCustomEndpoints],
-		ThemePrimaryColor:               settings[SettingKeyThemePrimaryColor],
+		ThemePrimaryColor:                settings[SettingKeyThemePrimaryColor],
+		ThemeRadius:                      settings[SettingKeyThemeRadius],
+		ThemeBaseColor:                   settings[SettingKeyThemeBaseColor],
+		ThemeDensity:                     settings[SettingKeyThemeDensity],
+		ThemeFontFamily:                  settings[SettingKeyThemeFontFamily],
 		BackendModeEnabled:               settings[SettingKeyBackendModeEnabled] == "true",
 	}
 	result.TableDefaultPageSize, result.TablePageSizeOptions = parseTablePreferences(

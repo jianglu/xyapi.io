@@ -28,8 +28,14 @@ async function bootstrap() {
   const appStore = useAppStore()
   appStore.initFromInjectedConfig()
 
-  // Apply primary color theme from server config (or default teal)
-  initTheme(appStore.cachedPublicSettings?.theme_primary_color)
+  // Apply appearance settings from server config (or defaults)
+  initTheme(
+    appStore.cachedPublicSettings?.theme_primary_color,
+    appStore.cachedPublicSettings?.theme_radius,
+    appStore.cachedPublicSettings?.theme_base_color,
+    appStore.cachedPublicSettings?.theme_density,
+    appStore.cachedPublicSettings?.theme_font_family,
+  )
 
   // Set document title immediately after config is loaded
   if (appStore.siteName && appStore.siteName !== 'Sub2API') {

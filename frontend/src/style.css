@@ -701,7 +701,7 @@
   }
 
   .sidebar-link {
-    @apply flex items-center gap-3 py-2.5;
+    @apply flex items-center gap-3 py-1.5;
     border-radius: var(--radius-xl);
     @apply overflow-hidden;
     @apply text-sm font-medium;

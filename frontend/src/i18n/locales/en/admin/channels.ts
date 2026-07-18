@@ -1,4 +1,34 @@
 export default {
+    modelPricing: {
+      title: 'Model Pricing',
+      description: 'All models known to the system with their prices (LiteLLM dynamic catalog + hard-coded fallback). Channel-level overrides are not shown here.',
+      total: 'Total models',
+      fromLitellm: 'From LiteLLM',
+      fromFallback: 'From Fallback',
+      lastSync: 'Last sync',
+      searchPlaceholder: 'Search model / provider / mode...',
+      allSources: 'All sources',
+      allProviders: 'All providers',
+      unit: 'Unit',
+      showingCount: 'Showing {filtered} of {total}',
+      empty: 'No models match filters',
+      priority: 'priority',
+      pageInfo: '{from} - {to} of {total}',
+      prev: 'Prev',
+      next: 'Next',
+      col: {
+        model: 'Model',
+        provider: 'Provider',
+        source: 'Source',
+        mode: 'Mode',
+        input: 'Input',
+        output: 'Output',
+        cacheRead: 'Cache read',
+        cacheWrite: 'Cache write',
+        longCtx: 'Long ctx',
+        flags: 'Flags'
+      }
+    },
     availableChannels: {
       title: 'Available Channels',
       description: 'Aggregated view: each channel with its linked groups and supported models (wildcards expanded)',

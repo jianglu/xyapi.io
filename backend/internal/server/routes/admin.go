@@ -101,6 +101,9 @@ func RegisterAdminRoutes(
 		// 渠道监控
 		registerChannelMonitorRoutes(admin, h)
 
+		// 模型价格总览
+		registerModelPricingRoutes(admin, h)
+
 		// 风控中心
 		registerContentModerationRoutes(admin, h)
 
@@ -651,6 +654,16 @@ func registerChannelRoutes(admin *gin.RouterGroup, h *handler.Handlers) {
 		channels.POST("", h.Admin.Channel.Create)
 		channels.PUT("/:id", h.Admin.Channel.Update)
 		channels.DELETE("/:id", h.Admin.Channel.Delete)
+	}
+}
+
+// registerModelPricingRoutes exposes a read-only aggregated view of the
+// system-wide model pricing catalog (LiteLLM + hard-coded fallback), used
+// by the admin "Model Pricing" viewer page.
+func registerModelPricingRoutes(admin *gin.RouterGroup, h *handler.Handlers) {
+	pricing := admin.Group("/pricing")
+	{
+		pricing.GET("/models", h.Admin.ModelPricing.List)
 	}
 }
 

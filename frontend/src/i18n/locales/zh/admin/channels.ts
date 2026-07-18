@@ -1,4 +1,34 @@
 export default {
+    modelPricing: {
+      title: '模型价格',
+      description: '查看系统当前所有已知模型的定价（LiteLLM 动态目录 + 硬编码兜底）。渠道级覆盖不在此列表中',
+      total: '总模型数',
+      fromLitellm: '来自 LiteLLM',
+      fromFallback: '来自 Fallback',
+      lastSync: '最近同步',
+      searchPlaceholder: '搜索模型 / 提供商 / 模式...',
+      allSources: '全部来源',
+      allProviders: '全部提供商',
+      unit: '单位',
+      showingCount: '显示 {filtered} / {total} 条',
+      empty: '没有符合条件的模型',
+      priority: 'priority',
+      pageInfo: '{from} - {to} / 共 {total} 条',
+      prev: '上一页',
+      next: '下一页',
+      col: {
+        model: '模型',
+        provider: '提供商',
+        source: '来源',
+        mode: '模式',
+        input: '输入',
+        output: '输出',
+        cacheRead: '缓存读',
+        cacheWrite: '缓存写',
+        longCtx: '长上下文',
+        flags: '特性'
+      }
+    },
     availableChannels: {
       title: '可用渠道',
       description: '按渠道聚合查看关联分组与支持模型（已展开通配符）',

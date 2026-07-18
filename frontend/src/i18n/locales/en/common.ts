@@ -188,6 +188,7 @@ export default {
     channelManagement: 'Channels',
     channelPricing: 'Channel Pricing',
     channelMonitor: 'Channel Monitor',
+    modelPricing: 'Model Pricing',
     channelStatus: 'Channel Status',
     riskControl: 'Risk Control',
   },

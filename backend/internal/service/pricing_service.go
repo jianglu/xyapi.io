@@ -1027,6 +1027,21 @@ func (s *PricingService) GetStatus() map[string]any {
 func (s *PricingService) ForceUpdate() error {
 	return s.downloadPricingData()
 }
+// ListAll returns a shallow copy of the entire LiteLLM catalog map for
+// admin inspection UIs (Model Pricing viewer). The returned map is
+// safe to iterate outside the service's lock — values are shared pointers,
+// so callers must not mutate them.
+func (s *PricingService) ListAll() map[string]*LiteLLMModelPricing {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	out := make(map[string]*LiteLLMModelPricing, len(s.pricingData))
+	for k, v := range s.pricingData {
+		out[k] = v
+	}
+	return out
+}
+
 
 // getPricingFilePath 获取价格文件路径
 func (s *PricingService) getPricingFilePath() string {

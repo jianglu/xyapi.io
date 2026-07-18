@@ -1614,3 +1614,15 @@ func getDefaultGrokImagineVideoPrice(model string, resolution string) (float64, 
 		return 0, false
 	}
 }
+
+// ListFallbackPricing returns a shallow copy of the hard-coded fallback
+// pricing map for admin inspection UIs (Model Pricing viewer). The returned
+// map is safe to iterate; values are shared pointers, so callers must not
+// mutate them.
+func (s *BillingService) ListFallbackPricing() map[string]*ModelPricing {
+	out := make(map[string]*ModelPricing, len(s.fallbackPrices))
+	for k, v := range s.fallbackPrices {
+		out[k] = v
+	}
+	return out
+}

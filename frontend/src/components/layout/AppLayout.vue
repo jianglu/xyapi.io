@@ -3,17 +3,17 @@
     <!-- Background Decoration -->
     <div class="pointer-events-none fixed inset-0 bg-mesh-gradient"></div>
 
-    <!-- Sidebar -->
+    <!-- Full-width Header (fixed top, spans entire viewport width) -->
+    <AppHeader />
+
+    <!-- Sidebar (starts below the fixed header) -->
     <AppSidebar />
 
-    <!-- Main Content Area -->
+    <!-- Main Content Area (offset by sidebar width + header height) -->
     <div
       class="relative min-h-screen transition-all duration-300"
       :class="[sidebarCollapsed ? 'lg:ml-[72px]' : 'lg:ml-64']"
     >
-      <!-- Header -->
-      <AppHeader />
-
       <!-- Main Content -->
       <main class="p-4 md:p-6 lg:p-8">
         <!-- Page Header (title + subtitle from route meta) -->

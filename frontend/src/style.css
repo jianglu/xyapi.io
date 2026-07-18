@@ -365,7 +365,7 @@
     @apply bg-white dark:bg-dark-800/50;
     border-radius: var(--radius-2xl);
     @apply border border-gray-100 dark:border-dark-700/50;
-    @apply shadow-card;
+    /*@apply shadow-card;*/
     @apply transition-all duration-300;
   }
 
@@ -679,7 +679,10 @@
 
   /* ============ 侧边栏 ============ */
   .sidebar {
-    @apply fixed inset-y-0 left-0 z-40;
+    /* Fixed left rail; starts BELOW the full-width AppHeader (h-16 = 4rem). */
+    @apply fixed left-0;
+    top: 4rem;
+    bottom: 0;
     @apply w-64 bg-white dark:bg-dark-900;
     @apply border-r border-gray-200 dark:border-dark-800;
     @apply flex flex-col;

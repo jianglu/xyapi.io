@@ -1,8 +1,8 @@
 <template>
   <header class="glass sticky top-0 z-30 border-b border-gray-200/50 dark:border-dark-700/50">
     <div class="flex h-16 items-center justify-between px-4 md:px-6">
-      <!-- Left: Mobile Menu Toggle + Page Title -->
-      <div class="flex items-center gap-4">
+      <!-- Left: Mobile Menu Toggle + Logo / Brand (moved from AppSidebar header) -->
+      <div class="flex items-center gap-3">
         <button
           @click="toggleMobileSidebar"
           class="btn-ghost btn-icon lg:hidden"
@@ -11,6 +11,29 @@
           <Icon name="menu" size="md" />
         </button>
 
+        <router-link
+          :to="homePath"
+          class="flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-glow transition-opacity hover:opacity-80"
+          @click="closeMobileSidebar"
+        >
+          <img
+            v-if="settingsLoaded"
+            :src="siteLogo || '/logo.png'"
+            alt="Logo"
+            class="h-full w-full object-contain"
+          />
+        </router-link>
+
+        <div class="hidden items-center gap-2 lg:flex">
+          <router-link
+            :to="homePath"
+            class="text-lg font-bold text-gray-900 transition-colors hover:text-primary-600 dark:text-white dark:hover:text-primary-400"
+            @click="closeMobileSidebar"
+          >
+            {{ siteName }}
+          </router-link>
+          <VersionBadge :version="siteVersion" />
+        </div>
       </div>
 
       <!-- Right: Announcements + Docs + Language + Subscriptions + Balance + User Dropdown -->
@@ -241,6 +264,7 @@ import SubscriptionProgressMini from '@/components/common/SubscriptionProgressMi
 import AnnouncementBell from '@/components/common/AnnouncementBell.vue'
 import Icon from '@/components/icons/Icon.vue'
 import { sanitizeUrl } from '@/utils/url'
+import VersionBadge from '@/components/common/VersionBadge.vue'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -261,6 +285,18 @@ const balanceAvailableText = computed(() => t('common.availableBalance') === 'co
 const balanceFrozenText = computed(() => t('common.frozenBalance') === 'common.frozenBalance' ? '冻结金额' : t('common.frozenBalance'))
 const balanceTotalText = computed(() => t('common.totalBalance') === 'common.totalBalance' ? '总余额' : t('common.totalBalance'))
 const balanceFrozenLabel = computed(() => `${balanceFrozenText.value} ${formatHeaderMoney(frozenBalance.value)}`)
+
+// Site brand info (moved from AppSidebar header)
+const siteName = computed(() => appStore.siteName)
+const siteLogo = computed(() => sanitizeUrl(appStore.siteLogo || '', { allowRelative: true, allowDataUrl: true }))
+const siteVersion = computed(() => appStore.siteVersion)
+const settingsLoaded = computed(() => appStore.publicSettingsLoaded)
+const homePath = computed(() => (authStore.user?.role === 'admin' ? '/admin/dashboard' : '/dashboard'))
+function closeMobileSidebar() {
+  if (appStore.mobileOpen) {
+    setTimeout(() => appStore.setMobileOpen(false), 150)
+  }
+}
 
 // 只在标准模式的管理员下显示新手引导按钮
 const showOnboardingButton = computed(() => {

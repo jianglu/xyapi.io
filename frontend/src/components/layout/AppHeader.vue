@@ -1,6 +1,6 @@
 <template>
   <header class="glass sticky top-0 z-30 border-b border-gray-200 dark:border-dark-700/50">
-    <div class="flex h-16 items-center justify-between px-4 md:px-6">
+    <div class="flex h-12 items-center justify-between px-4 md:px-6">
       <!-- Left: Mobile Menu Toggle + Logo / Brand (moved from AppSidebar header) -->
       <div class="flex items-center gap-3">
         <button
@@ -13,7 +13,7 @@
 
         <router-link
           :to="homePath"
-          class="flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl shadow-glow transition-opacity hover:opacity-80"
+          class="flex h-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl transition-opacity hover:opacity-80"
           @click="closeMobileSidebar"
         >
           <img
@@ -25,13 +25,6 @@
         </router-link>
 
         <div class="hidden items-center gap-2 lg:flex">
-          <router-link
-            :to="homePath"
-            class="text-lg font-bold text-gray-900 transition-colors hover:text-primary-600 dark:text-white dark:hover:text-primary-400"
-            @click="closeMobileSidebar"
-          >
-            {{ siteName }}
-          </router-link>
           <VersionBadge :version="siteVersion" />
         </div>
       </div>
@@ -114,7 +107,7 @@
             aria-label="User Menu"
             :data-open="dropdownOpen"
           >
-            <div class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-sm font-medium text-white shadow-sm">
+            <div class="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-xs font-medium text-white shadow-sm">
               <img
                 v-if="avatarUrl"
                 :src="avatarUrl"
@@ -126,9 +119,6 @@
             <div class="hidden text-left md:block">
               <div class="text-sm font-medium text-gray-900 dark:text-white">
                 {{ displayName }}
-              </div>
-              <div class="text-xs capitalize text-gray-500 dark:text-dark-400">
-                {{ user.role }}
               </div>
             </div>
             <Icon
@@ -292,7 +282,6 @@ const balanceTotalText = computed(() => t('common.totalBalance') === 'common.tot
 const balanceFrozenLabel = computed(() => `${balanceFrozenText.value} ${formatHeaderMoney(frozenBalance.value)}`)
 
 // Site brand info (moved from AppSidebar header)
-const siteName = computed(() => appStore.siteName)
 const siteLogo = computed(() => sanitizeUrl(appStore.siteLogo || '', { allowRelative: true, allowDataUrl: true }))
 const siteVersion = computed(() => appStore.siteVersion)
 const settingsLoaded = computed(() => appStore.publicSettingsLoaded)

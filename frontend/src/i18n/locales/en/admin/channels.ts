@@ -3,6 +3,7 @@ export default {
       title: 'Model Pricing',
       description: 'All models known to the system with their prices (LiteLLM dynamic catalog + hard-coded fallback). Channel-level overrides are not shown here.',
       total: 'Total models',
+      fromOpenRouter: 'From OpenRouter',
       fromLitellm: 'From LiteLLM',
       fromFallback: 'From Fallback',
       lastSync: 'Last sync',
@@ -16,6 +17,17 @@ export default {
       pageInfo: '{from} - {to} of {total}',
       prev: 'Prev',
       next: 'Next',
+      openrouter: {
+        title: 'OpenRouter Pricing Sync',
+        desc: 'Pull all model prices from openrouter.ai as a dedicated source (takes precedence over LiteLLM). Disabled by default.',
+        enabled: 'Enabled',
+        interval: 'Interval',
+        refresh: 'Sync now',
+        refreshing: 'Syncing...',
+        cached: '{n} models cached',
+        refreshed: 'Synced, {n} models total',
+        saved: 'Settings saved'
+      },
       col: {
         model: 'Model',
         provider: 'Provider',

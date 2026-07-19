@@ -3,6 +3,7 @@ export default {
       title: '模型价格',
       description: '查看系统当前所有已知模型的定价（LiteLLM 动态目录 + 硬编码兜底）。渠道级覆盖不在此列表中',
       total: '总模型数',
+      fromOpenRouter: '来自 OpenRouter',
       fromLitellm: '来自 LiteLLM',
       fromFallback: '来自 Fallback',
       lastSync: '最近同步',
@@ -16,6 +17,17 @@ export default {
       pageInfo: '{from} - {to} / 共 {total} 条',
       prev: '上一页',
       next: '下一页',
+      openrouter: {
+        title: 'OpenRouter 定价同步',
+        desc: '从 openrouter.ai 拉取全部模型定价，作为独立定价源（优先级高于 LiteLLM）。默认关闭。',
+        enabled: '启用',
+        interval: '间隔',
+        refresh: '立即同步',
+        refreshing: '同步中...',
+        cached: '已缓存 {n} 个模型',
+        refreshed: '同步完成，共 {n} 个模型',
+        saved: '设置已保存'
+      },
       col: {
         model: '模型',
         provider: '提供商',

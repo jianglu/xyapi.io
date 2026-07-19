@@ -8,8 +8,8 @@ import { apiClient } from '@/api/client'
 export interface ModelPricingEntry {
   model: string
   provider?: string
-  /** Source of this entry: dynamic LiteLLM catalog vs hard-coded fallback. */
-  source: 'litellm' | 'fallback'
+  /** Source of this entry: OpenRouter overlay, dynamic LiteLLM catalog, or hard-coded fallback. */
+  source: 'openrouter' | 'litellm' | 'fallback'
   /** LiteLLM-reported mode: chat / embedding / image_generation / ... */
   mode?: string
 
@@ -57,7 +57,46 @@ export const modelPricingAPI = {
   async list(): Promise<ModelPricingListResponse> {
     const { data } = await apiClient.get<ModelPricingListResponse>('/admin/pricing/models')
     return data
+  },
+
+  async getOpenRouterSettings(): Promise<OpenRouterSettingsResponse> {
+    const { data } = await apiClient.get<OpenRouterSettingsResponse>('/admin/pricing/openrouter/settings')
+    return data
+  },
+
+  async updateOpenRouterSettings(
+    payload: OpenRouterPricingSettings
+  ): Promise<{ settings: OpenRouterPricingSettings }> {
+    const { data } = await apiClient.put<{ settings: OpenRouterPricingSettings }>(
+      '/admin/pricing/openrouter/settings',
+      payload
+    )
+    return data
+  },
+
+  async refreshOpenRouter(): Promise<{ status: OpenRouterSyncStatus }> {
+    const { data } = await apiClient.post<{ status: OpenRouterSyncStatus }>(
+      '/admin/pricing/openrouter/refresh'
+    )
+    return data
   }
+}
+
+export interface OpenRouterPricingSettings {
+  enabled: boolean
+  interval_minutes: number
+  remote_url: string
+}
+
+export interface OpenRouterSyncStatus {
+  model_count?: number
+  last_updated?: string
+  last_error?: string
+}
+
+export interface OpenRouterSettingsResponse {
+  settings: OpenRouterPricingSettings
+  status: OpenRouterSyncStatus
 }
 
 export default modelPricingAPI

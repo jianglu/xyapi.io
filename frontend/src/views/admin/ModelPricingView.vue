@@ -2,12 +2,18 @@
   <AppLayout>
     <div class="space-y-4">
       <!-- Header + status cards -->
-      <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         <div class="card p-4">
           <p class="text-xs font-medium text-muted-foreground">
             {{ t('admin.modelPricing.total') }}
           </p>
           <p class="mt-1 text-2xl font-bold">{{ data?.total ?? '—' }}</p>
+        </div>
+        <div class="card p-4">
+          <p class="text-xs font-medium text-muted-foreground">
+            {{ t('admin.modelPricing.fromOpenRouter') }}
+          </p>
+          <p class="mt-1 text-2xl font-bold">{{ data?.sources.openrouter ?? 0 }}</p>
         </div>
         <div class="card p-4">
           <p class="text-xs font-medium text-muted-foreground">
@@ -35,6 +41,52 @@
           <p class="mt-1 text-xs text-muted-foreground font-mono">
             {{ data?.status?.local_hash || '' }}
           </p>
+        </div>
+      </div>
+
+      <!-- OpenRouter 定价同步面板 -->
+      <div class="card p-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="text-sm font-semibold">{{ t('admin.modelPricing.openrouter.title') }}</h3>
+            <p class="mt-0.5 text-xs text-muted-foreground">
+              {{ t('admin.modelPricing.openrouter.desc') }}
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <!-- enable toggle -->
+            <label class="flex cursor-pointer items-center gap-2 text-sm">
+              <input v-model="orSettings.enabled" type="checkbox" class="h-4 w-4" />
+              {{ t('admin.modelPricing.openrouter.enabled') }}
+            </label>
+            <!-- interval -->
+            <div class="flex items-center gap-1.5 text-sm">
+              <span class="text-muted-foreground">{{ t('admin.modelPricing.openrouter.interval') }}</span>
+              <input
+                v-model.number="orSettings.interval_minutes"
+                type="number"
+                min="30"
+                max="10080"
+                class="input w-24"
+              />
+              <span class="text-muted-foreground">min</span>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" :disabled="orSaving" @click="saveOpenRouter">
+              {{ orSaving ? t('common.saving') : t('common.save') }}
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" :disabled="orRefreshing" @click="refreshOpenRouter">
+              {{ orRefreshing ? t('admin.modelPricing.openrouter.refreshing') : t('admin.modelPricing.openrouter.refresh') }}
+            </button>
+          </div>
+        </div>
+        <div class="mt-2 flex flex-wrap gap-4 text-xs text-muted-foreground">
+          <span>{{ t('admin.modelPricing.openrouter.cached', { n: orStatus?.model_count ?? 0 }) }}</span>
+          <span v-if="orStatus?.last_updated && orStatus.last_updated !== '0001-01-01T00:00:00Z'">
+            {{ t('admin.modelPricing.lastSync') }}: {{ formatDateTime(orStatus.last_updated) }}
+          </span>
+          <span v-if="orStatus?.last_error" class="text-red-500">
+            {{ orStatus.last_error }}
+          </span>
         </div>
       </div>
 
@@ -67,6 +119,7 @@
           <!-- Source filter -->
           <select v-model="sourceFilter" class="input w-32">
             <option value="">{{ t('admin.modelPricing.allSources') }}</option>
+            <option value="openrouter">OpenRouter</option>
             <option value="litellm">LiteLLM</option>
             <option value="fallback">Fallback</option>
           </select>
@@ -153,7 +206,9 @@
                   <span
                     class="rounded px-2 py-0.5 text-xs font-medium"
                     :class="
-                      m.source === 'litellm'
+                      m.source === 'openrouter'
+                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300'
+                        : m.source === 'litellm'
                         ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300'
                         : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
                     "
@@ -272,17 +327,31 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppLayout from '@/components/layout/AppLayout.vue'
+import { useAppStore } from '@/stores'
 import { adminAPI } from '@/api/admin'
 import type {
   ModelPricingEntry,
-  ModelPricingListResponse
+  ModelPricingListResponse,
+  OpenRouterPricingSettings,
+  OpenRouterSyncStatus
 } from '@/api/admin/modelPricing'
 
 const { t } = useI18n()
+const appStore = useAppStore()
 
 const loading = ref(true)
 const loadError = ref<string | null>(null)
 const data = ref<ModelPricingListResponse | null>(null)
+
+// OpenRouter 同步设置面板状态
+const orSettings = ref<OpenRouterPricingSettings>({
+  enabled: false,
+  interval_minutes: 360,
+  remote_url: 'https://openrouter.ai/api/v1/models'
+})
+const orStatus = ref<OpenRouterSyncStatus | null>(null)
+const orSaving = ref(false)
+const orRefreshing = ref(false)
 
 // filter state
 const query = ref('')
@@ -353,5 +422,46 @@ async function load() {
   }
 }
 
-onMounted(load)
+async function loadOpenRouterSettings() {
+  try {
+    const res = await adminAPI.modelPricing.getOpenRouterSettings()
+    orSettings.value = res.settings
+    orStatus.value = res.status
+  } catch {
+    // 静默：面板用默认值即可
+  }
+}
+
+async function saveOpenRouter() {
+  orSaving.value = true
+  try {
+    await adminAPI.modelPricing.updateOpenRouterSettings(orSettings.value)
+    appStore.showSuccess(t('admin.modelPricing.openrouter.saved'))
+  } catch (err: any) {
+    appStore.showError(err?.message || String(err))
+  } finally {
+    orSaving.value = false
+  }
+}
+
+async function refreshOpenRouter() {
+  orRefreshing.value = true
+  try {
+    const res = await adminAPI.modelPricing.refreshOpenRouter()
+    orStatus.value = res.status
+    appStore.showSuccess(
+      t('admin.modelPricing.openrouter.refreshed', { n: res.status?.model_count ?? 0 })
+    )
+    await load() // 刷新总览列表以纳入最新 OpenRouter 条目
+  } catch (err: any) {
+    appStore.showError(err?.message || String(err))
+  } finally {
+    orRefreshing.value = false
+  }
+}
+
+onMounted(() => {
+  load()
+  loadOpenRouterSettings()
+})
 </script>

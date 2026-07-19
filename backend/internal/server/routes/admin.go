@@ -664,6 +664,10 @@ func registerModelPricingRoutes(admin *gin.RouterGroup, h *handler.Handlers) {
 	pricing := admin.Group("/pricing")
 	{
 		pricing.GET("/models", h.Admin.ModelPricing.List)
+		// OpenRouter 定价同步设置 + 手动刷新
+		pricing.GET("/openrouter/settings", h.Admin.ModelPricing.GetOpenRouterSettings)
+		pricing.PUT("/openrouter/settings", h.Admin.ModelPricing.UpdateOpenRouterSettings)
+		pricing.POST("/openrouter/refresh", h.Admin.ModelPricing.RefreshOpenRouter)
 	}
 }
 

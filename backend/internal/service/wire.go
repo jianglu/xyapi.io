@@ -30,6 +30,13 @@ func ProvidePricingService(cfg *config.Config, remoteClient PricingRemoteClient)
 	return svc, nil
 }
 
+// ProvideOpenRouterPricingService creates and initializes OpenRouterPricingService.
+func ProvideOpenRouterPricingService(cfg *config.Config, remoteClient PricingRemoteClient, settingService *SettingService) *OpenRouterPricingService {
+	svc := NewOpenRouterPricingService(cfg, remoteClient, settingService)
+	svc.Initialize()
+	return svc
+}
+
 // ProvideUpdateService creates UpdateService with BuildInfo
 func ProvideUpdateService(cache UpdateCache, githubClient GitHubReleaseClient, buildInfo BuildInfo) *UpdateService {
 	return NewUpdateService(cache, githubClient, buildInfo.Version, buildInfo.BuildType)
@@ -631,6 +638,7 @@ var ProviderSet = wire.NewSet(
 	NewUsageService,
 	NewDashboardService,
 	ProvidePricingService,
+	ProvideOpenRouterPricingService,
 	NewBillingService,
 	ProvideBillingCacheService,
 	NewAnnouncementService,

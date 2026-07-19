@@ -7,9 +7,10 @@ import (
 
 // PricingSource 定价来源标识
 const (
-	PricingSourceChannel  = "channel"
-	PricingSourceLiteLLM  = "litellm"
-	PricingSourceFallback = "fallback"
+	PricingSourceChannel    = "channel"
+	PricingSourceOpenRouter = "openrouter"
+	PricingSourceLiteLLM    = "litellm"
+	PricingSourceFallback   = "fallback"
 )
 
 // ResolvedPricing 统一定价解析结果
@@ -42,15 +43,17 @@ type ResolvedPricing struct {
 // ModelPricingResolver 统一模型定价解析器。
 // 解析链：Channel → LiteLLM → Fallback。
 type ModelPricingResolver struct {
-	channelService *ChannelService
-	billingService *BillingService
+	channelService   *ChannelService
+	billingService   *BillingService
+	openRouterService *OpenRouterPricingService
 }
 
 // NewModelPricingResolver 创建定价解析器实例
-func NewModelPricingResolver(channelService *ChannelService, billingService *BillingService) *ModelPricingResolver {
+func NewModelPricingResolver(channelService *ChannelService, billingService *BillingService, openRouterService *OpenRouterPricingService) *ModelPricingResolver {
 	return &ModelPricingResolver{
-		channelService: channelService,
-		billingService: billingService,
+		channelService:    channelService,
+		billingService:    billingService,
+		openRouterService: openRouterService,
 	}
 }
 
@@ -108,6 +111,12 @@ func (r *ModelPricingResolver) Resolve(ctx context.Context, input PricingInput) 
 
 // resolveBasePricing 从 LiteLLM 或 Fallback 获取基础定价
 func (r *ModelPricingResolver) resolveBasePricing(model string) (*ModelPricing, string) {
+	// OpenRouter 覆盖层优先（若已启用且命中该模型 ID）
+	if r.openRouterService != nil {
+		if orPricing := r.openRouterService.GetModelPricing(model); orPricing != nil {
+			return orPricing, PricingSourceOpenRouter
+		}
+	}
 	pricing, err := r.billingService.GetModelPricing(model)
 	if err != nil {
 		slog.Debug("failed to get model pricing from LiteLLM, using fallback",

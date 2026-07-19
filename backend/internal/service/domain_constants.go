@@ -378,6 +378,7 @@ const (
 	// SettingKeyUpstreamBillingProbeSettings stores the global enable switch and interval
 	// for probing remote Sub2API API-key billing metadata.
 	SettingKeyUpstreamBillingProbeSettings = "upstream_billing_probe_settings"
+	SettingKeyOpenRouterPricingSettings    = "openrouter_pricing_settings" // OpenRouter 定价同步设置(JSON)
 
 	// =========================
 	// Overload Cooldown (529)

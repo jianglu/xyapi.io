@@ -1,5 +1,5 @@
 <template>
-  <header class="glass sticky top-0 z-30 border-b border-gray-200/50 dark:border-dark-700/50">
+  <header class="glass sticky top-0 z-30 border-b border-gray-200 dark:border-dark-700/50">
     <div class="flex h-16 items-center justify-between px-4 md:px-6">
       <!-- Left: Mobile Menu Toggle + Logo / Brand (moved from AppSidebar header) -->
       <div class="flex items-center gap-3">
@@ -110,10 +110,11 @@
         <div v-if="user" class="relative" ref="dropdownRef">
           <button
             @click="toggleDropdown"
-            class="flex items-center gap-2 rounded-xl p-1.5 transition-colors hover:bg-gray-100 dark:hover:bg-dark-800"
+            class="group flex items-center gap-2 rounded-full p-1.5 transition-colors"
             aria-label="User Menu"
+            :data-open="dropdownOpen"
           >
-            <div class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-sm font-medium text-white shadow-sm">
+            <div class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary-500 to-primary-600 text-sm font-medium text-white shadow-sm">
               <img
                 v-if="avatarUrl"
                 :src="avatarUrl"
@@ -130,12 +131,16 @@
                 {{ user.role }}
               </div>
             </div>
-            <Icon name="chevronDown" size="sm" class="hidden text-gray-400 md:block" />
+            <Icon
+                name="chevronDown"
+                size="sm"
+                class="hidden text-primary-500 group-data-[open=true]:rotate-180 md:block transition-transform duration-200"
+            />
           </button>
 
           <!-- Dropdown Menu -->
           <transition name="dropdown">
-            <div v-if="dropdownOpen" class="dropdown right-0 mt-2 w-56">
+            <div v-if="dropdownOpen" class="dropdown right-0 w-56">
               <!-- User Info -->
               <div class="border-b border-gray-100 px-4 py-3 dark:border-dark-700">
                 <div class="text-sm font-medium text-gray-900 dark:text-white">

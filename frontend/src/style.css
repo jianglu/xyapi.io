@@ -683,8 +683,8 @@
     @apply fixed left-0;
     top: 4rem;
     bottom: 0;
-    @apply w-64 bg-white dark:bg-dark-900;
-    @apply border-r border-gray-200 dark:border-dark-800;
+    @apply w-64 bg-gray-100/20 dark:bg-dark-900;
+    @apply border-r border-gray-200/50 dark:border-dark-800;
     @apply flex flex-col;
     @apply transition-transform duration-300;
     transition-property: width, transform;

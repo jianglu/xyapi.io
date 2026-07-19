@@ -20,7 +20,7 @@
             v-if="settingsLoaded"
             :src="siteLogo || '/logo.png'"
             alt="Logo"
-            class="h-full w-full object-contain"
+            class="h-full w-full object-contain dark:invert"
           />
         </router-link>
 

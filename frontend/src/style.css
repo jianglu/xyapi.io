@@ -681,7 +681,8 @@
   .sidebar {
     /* Fixed left rail; starts BELOW the full-width AppHeader (h-16 = 4rem). */
     @apply fixed left-0;
-    top: 4rem;
+    @apply top-12;
+    @apply pt-4;
     bottom: 0;
     @apply w-64 bg-gray-100/20 dark:bg-dark-900;
     @apply border-r border-gray-200/50 dark:border-dark-800;

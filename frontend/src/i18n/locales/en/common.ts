@@ -167,6 +167,7 @@ export default {
     accounts: 'Accounts',
     proxies: 'Proxies',
     redeemCodes: 'Redeem Codes',
+    inviteCodes: 'Invitation Codes',
     ops: 'Ops',
     promoCodes: 'Promo Codes',
     settings: 'Settings',

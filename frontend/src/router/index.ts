@@ -553,6 +553,19 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/admin/invite-codes',
+    name: 'AdminInviteCodes',
+    component: () => import('@/views/admin/InviteCodesView.vue'),
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true,
+      requiresInvitationCode: true,
+      title: 'Invitation Code Management',
+      titleKey: 'admin.invite.title',
+      descriptionKey: 'admin.invite.description'
+    }
+  },
+  {
     path: '/admin/promo-codes',
     name: 'AdminPromoCodes',
     component: () => import('@/views/admin/PromoCodesView.vue'),
@@ -884,12 +897,22 @@ router.beforeEach(async (to, _from, next) => {
     return
   }
 
+  if (
+    to.meta.requiresInvitationCode &&
+    appStore.publicSettingsLoaded &&
+    appStore.cachedPublicSettings?.invitation_code_enabled === false
+  ) {
+    next(authStore.isAdmin ? '/admin/dashboard' : '/dashboard')
+    return
+  }
+
   // 简易模式下限制访问某些页面
   if (authStore.isSimpleMode) {
     const restrictedPaths = [
       '/admin/groups',
       '/admin/subscriptions',
       '/admin/redeem',
+      '/admin/invite-codes',
       '/subscriptions',
       '/redeem'
     ]

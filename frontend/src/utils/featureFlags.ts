@@ -124,6 +124,11 @@ export const FeatureFlags = {
     mode: 'opt-out',
     label: 'Redeem Code',
   }),
+  invitationCodeAdmin: defineFlag({
+    key: 'invitation_code_enabled',
+    mode: 'opt-in',
+    label: 'Invitation Code Admin',
+  }),
 } as const
 
 export type RegisteredFeatureFlag = keyof typeof FeatureFlags
